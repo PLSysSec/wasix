@@ -43,6 +43,9 @@ int main(int argc, char * argv[]) {
   buf[4] = '\0';
   printf("read: %s\n", buf);
 
+  int wn = write(fdA, buf, 4);
+  printf("%d bytes written to a.txt\n", wn);
+
 
   struct stat statA;
   fstat(fdA, &statA);
@@ -58,6 +61,10 @@ int main(int argc, char * argv[]) {
   fdatasync(fdA);
 
   close(fdA);
+
+  srand(time(NULL));
+  int rn = rand();
+  printf("random number is: %d\n", rn);
 
   return 0;
 }
