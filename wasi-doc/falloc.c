@@ -16,7 +16,7 @@ int main() {
 
   printf("Before fallocate:\n");
   fstat(fd, &fs);
-  printf("size is: %lld\n", fs.st_size);
+  printf("size is: %lld\n", (long long) fs.st_size);
 
   int r = posix_fallocate(fd, 0, 1);
   printf("posix_fallocate returns %d\n", r);
@@ -26,5 +26,5 @@ int main() {
 
   printf("After fallocate:\n");
   fstat(fd, &fs);
-  printf("size is: %lld\n", fs.st_size);
+  printf("size is: %lld\n", (long long) fs.st_size);
 }
