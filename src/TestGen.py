@@ -27,9 +27,11 @@ def InitBlockPool(config):
       Block(SYSCALL.getenv, env_var)
     )
 
-  for file in config["files"]:
+  for i in range(len(config["files"])):
+    path = config["files"][i]["path"]
+    perm = config["files"][i]["permission"]
     init.append(
-      Block(SYSCALL.open, file["path"], file["permission"])
+      Block(SYSCALL.open, path, perm, ret = Variable("int", "fd{}".format(i)))
     )
 
   pool = BlockPool()

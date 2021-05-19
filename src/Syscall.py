@@ -19,7 +19,7 @@ class Constraint:
     canFollow = []
     if prev.syscall == SYSCALL.getenv: pass
     elif prev.syscall == SYSCALL.open:
-      fd = prev.fd
+      fd = prev.ret
       canFollow = [
         Block(SYSCALL.read, fd, Buffer.GLOBAL_RBUF, 0),
         Block(SYSCALL.read, fd, Buffer.GLOBAL_RBUF, 1),

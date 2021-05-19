@@ -2,16 +2,17 @@
 import random
 
 class Block:
-  def __init__(self, syscall, *args):
+  def __init__(self, syscall, *args, ret = None):
     self.syscall = syscall 
     self.args = args
+    self.ret = ret
     self.fd = args[0] if len(args) > 0 else None
 
   def getID(self):
-    args_str = ""
-    for arg in self.args:
-      args_str += "::" + str(arg)
-    return self.syscall + args_str
+    separator = ", "
+    args_str = separator.join([str(i) for i in self.args])
+    func_str = "{}({}) -> {}"
+    return func_str.format(self.syscall, args_str, str(self.ret))
 
 
 class BlockPool:

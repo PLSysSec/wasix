@@ -1,5 +1,13 @@
 import random
 
+class Variable:
+  def __init__(self, type, name):
+    self.type = type
+    self.name = name
+
+  def __str__(self):
+    return "{}_{}".format(str(self.type), str(self.name))
+
 class RandomInteger:
   def __init__(self, min, max):
     self.min = min
