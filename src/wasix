@@ -1,0 +1,44 @@
+#!/usr/bin/env python3.9
+
+import argparse
+
+from TestGen import TestGen
+
+def get_args():
+    parser = argparse.ArgumentParser(description='A differential testing tool for WASI-compatible WASM runtimes')
+
+    task = parser.add_mutually_exclusive_group(required=True)
+    task.add_argument("--gen", action="store_true", help="generate tests")
+    task.add_argument("--run", action="store_true", help="run tests and generate trace files")
+    task.add_argument("--check", action="store_true", help="compare trace files")
+    parser.add_argument("other_args", nargs="*", help="compare trace files")
+
+    args = parser.parse_args()
+    return args
+
+def generate_tests():
+  config = {
+    "files": [
+      {"path": "small.txt", "permission": "O_RDWR"},
+      {"path": "medium.txt", "permission": "O_RDWR"},
+      {"path": "large.txt", "permission": "O_RDWR"},
+      {"path": "not_exist.txt", "permission": "O_RDWR"},
+    ],
+    "env": ["ENV_VAR_1", "ENV_VAR_2"]
+  }
+  test = TestGen(config, 10)
+  for b in test:
+    print(b.getID())
+
+def main():
+  args = get_args()
+  if args.gen:
+    print("Generating tests")
+    generate_tests()
+  elif args.run:
+    print("Running tests")
+  elif args.check:
+    print("Checking traces")
+
+if __name__ == "__main__":
+  main()
