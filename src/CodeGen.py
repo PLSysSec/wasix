@@ -38,7 +38,7 @@ def BlockToCode(i, block):
     ]
     return SEP.join(code)
   elif block.syscall == SYSCALL.close:
-    return "close({})".format(block.args[0].getRef())
+    return "close({});".format(block.args[0].getRef())
   elif block.syscall == SYSCALL.clock_getres:
     tsName= "ts_{}".format(i)
     code = [

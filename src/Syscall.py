@@ -52,13 +52,18 @@ class Constraint:
 
   def getRemovalFunc(prev : Block):
     if prev.syscall == SYSCALL.getenv: pass
-    elif prev.syscall == SYSCALL.open: pass
+    elif prev.syscall == SYSCALL.open:
+      def handleOpen(pool):
+        # Prevent double open
+        pool.pop(prev.getID(), None)
+      return handleOpen
     elif prev.syscall == SYSCALL.read: pass
     elif prev.syscall == SYSCALL.write: pass
     elif prev.syscall == SYSCALL.posix_fallocate: pass
     elif prev.syscall == SYSCALL.fstat: pass
     elif prev.syscall == SYSCALL.close:
       def handleClose(pool):
+        # TODO: can we enable reopen the same file again?
         for id, block in list(pool.items()):
           if(block.fd == prev.fd):
             pool.pop(id)
