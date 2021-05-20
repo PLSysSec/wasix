@@ -21,20 +21,20 @@ class Constraint:
     elif prev.syscall == SYSCALL.open:
       fd = prev.ret
       canFollow = [
-        Block(SYSCALL.read, fd, Buffer.GLOBAL_RBUF, 0),
-        Block(SYSCALL.read, fd, Buffer.GLOBAL_RBUF, 1),
-        Block(SYSCALL.read, fd, Buffer.GLOBAL_RBUF, 4096),
+        Block(SYSCALL.read, fd, Buffer.GLOBAL_RBUF, Integer(0)),
+        Block(SYSCALL.read, fd, Buffer.GLOBAL_RBUF, Integer(1)),
+        Block(SYSCALL.read, fd, Buffer.GLOBAL_RBUF, Integer(4096)),
         Block(SYSCALL.read, fd, Buffer.GLOBAL_RBUF, RandomInteger(0, 4096)),
 
-        Block(SYSCALL.write, fd, Buffer.GLOBAL_WBUF, 0),
-        Block(SYSCALL.write, fd, Buffer.GLOBAL_WBUF, 1),
-        Block(SYSCALL.write, fd, Buffer.GLOBAL_WBUF, 4096),
+        Block(SYSCALL.write, fd, Buffer.GLOBAL_WBUF, Integer(0)),
+        Block(SYSCALL.write, fd, Buffer.GLOBAL_WBUF, Integer(1)),
+        Block(SYSCALL.write, fd, Buffer.GLOBAL_WBUF, Integer(4096)),
         Block(SYSCALL.write, fd, Buffer.GLOBAL_WBUF, RandomInteger(0, 4096)),
 
-        Block(SYSCALL.posix_fallocate, fd, 0, 0),
-        Block(SYSCALL.posix_fallocate, fd, 0, 1),
-        Block(SYSCALL.posix_fallocate, fd, 0, 4096),
-        Block(SYSCALL.posix_fallocate, fd, 0, RandomInteger(0, 4096)),
+        Block(SYSCALL.posix_fallocate, fd, Integer(0), Integer(0)),
+        Block(SYSCALL.posix_fallocate, fd, Integer(0), Integer(1)),
+        Block(SYSCALL.posix_fallocate, fd, Integer(0), Integer(4096)),
+        Block(SYSCALL.posix_fallocate, fd, Integer(0), RandomInteger(0, 4096)),
 
         Block(SYSCALL.fstat, fd),
         Block(SYSCALL.close, fd)

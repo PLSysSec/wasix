@@ -1,8 +1,10 @@
 #!/usr/bin/env python3.9
 
 import argparse
+import secrets
 
 from TestGen import TestGen
+from CodeGen import CodeGen
 
 def get_args():
     parser = argparse.ArgumentParser(description='A differential testing tool for WASI-compatible WASM runtimes')
@@ -11,12 +13,15 @@ def get_args():
     task.add_argument("--gen", action="store_true", help="generate tests")
     task.add_argument("--run", action="store_true", help="run tests and generate trace files")
     task.add_argument("--check", action="store_true", help="compare trace files")
+    parser.add_argument("--num", help="number of tests")
+    parser.add_argument("--size", help="size of each test")
+    parser.add_argument("--dir", help="destination to put tests")
     parser.add_argument("other_args", nargs="*", help="compare trace files")
 
     args = parser.parse_args()
     return args
 
-def generate_tests():
+def generate_tests(num, size, dir):
   config = {
     "files": [
       {"path": "small.txt", "permission": "O_RDWR"},
@@ -26,15 +31,25 @@ def generate_tests():
     ],
     "env": ["ENV_VAR_1", "ENV_VAR_2"]
   }
-  test = TestGen(config, 10)
-  for b in test:
-    print(b.getID())
+  for i in range(num):
+    blocks = TestGen(config, size)
+    print("Generated test#{}:".format(i))
+
+    n = secrets.token_hex(8)
+    fn ="{}/{}.c".format(dir, n)
+    f = open(fn, "w")
+    f.write(CodeGen(blocks))
+    print("Stored into {}".format(fn))
+
+    for b in blocks:
+      print("\t{}".format(b.getID()))
+
 
 def main():
   args = get_args()
   if args.gen:
-    print("Generating tests")
-    generate_tests()
+    print("Generating {} tests with size {} at {}".format(args.num, args.size, args.dir))
+    generate_tests(int(args.num), int(args.size), args.dir)
   elif args.run:
     print("Running tests")
   elif args.check:

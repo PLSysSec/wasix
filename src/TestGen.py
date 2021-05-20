@@ -15,7 +15,6 @@ def TestGen(config, test_size):
   # TODO: Turn blocks to C code
   return test_blocks
   
-    
 def InitBlockPool(config):
   init = [
     Block(SYSCALL.clock_getres),
