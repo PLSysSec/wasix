@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.9
+#!/usr/bin/env python3.8
 
 import argparse
 import secrets
@@ -39,7 +39,7 @@ def generate_tests(num, size, dir):
     n = secrets.token_hex(8)
     fn ="{}/{}.c".format(dir, n)
     f = open(fn, "w")
-    f.write(CodeGen(blocks))
+    f.write(CodeGen(blocks, n))
     print("Stored into {}".format(fn))
 
     for b in blocks:
