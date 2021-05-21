@@ -4,9 +4,10 @@ from Template import *
 SEP = "\n\t"
 
 def CodeGen(blocks, fileName):
-  code = []
-  logTrace = "FILE *fp = fopen(\"{0}.trace\", \"w\");".format(fileName)
-  code.append(logTrace)
+  code = [
+    "FILE *fp = fopen(\"{0}.trace\", \"w\");".format(fileName),
+    "log_add_fp(fp, LOG_TRACE);"
+  ]
   for i in range(len(blocks)):
     code.append(BlockToCode(i, blocks[i]))
   return plain_c_template.format(SEP.join(code))
