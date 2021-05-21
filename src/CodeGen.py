@@ -5,7 +5,7 @@ SEP = "\n\t"
 
 def CodeGen(blocks, fileName):
   code = []
-  logTrace = "FILE *fp = fopen(\"LOG_TRACE_{0}\", \"w\");".format(fileName)
+  logTrace = "FILE *fp = fopen(\"{0}.trace\", \"w\");".format(fileName)
   code.append(logTrace)
   for i in range(len(blocks)):
     code.append(BlockToCode(i, blocks[i]))
@@ -20,7 +20,7 @@ def BlockToCode(i, block):
     )
   elif block.syscall == SYSCALL.read:
     # TODO buffer to str is wrong
-    execCode = "int readRet = read({}, {}, {});".format(
+    execCode = "readRet = read({}, {}, {});".format(
       block.args[0].getRef(), block.args[1].getValueStr(), block.args[2].getValueStr()
     )
     logCode = "log_trace(\"numOfBytes Read %d\", readRet);"
@@ -30,7 +30,7 @@ def BlockToCode(i, block):
     ]
     return SEP.join(code)
   elif block.syscall == SYSCALL.write:
-    execCode = "int writeRet = write({}, {}, {});".format(
+    execCode = "writeRet = write({}, {}, {});".format(
       block.args[0].getRef(), block.args[1].getValueStr(), block.args[2].getValueStr()
     )
     logCode = "log_trace(\"numOfBytes Written %d\", writeRet);"

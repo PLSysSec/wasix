@@ -14,6 +14,9 @@ int main(int argc, char * argv[]) {{
 	char global_rbuf[4096];
 	char global_wbuf[4096];
 
+	int readRet = 0;
+	int writeRet = 0;
+
 	{}  
 }}
 """
