@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.8
+#!/usr/bin/env python3
 
 import argparse
 import secrets
@@ -7,6 +7,7 @@ import os
 
 from pathlib import Path
 from Executor import Execute
+from Checker import Check
 
 from TestGen import TestGen
 from CodeGen import CodeGen
@@ -18,12 +19,12 @@ def get_args():
     task.add_argument("--gen", action="store_true", help="generate tests")
     task.add_argument("--run", action="store_true", help="run tests and generate trace files")
     task.add_argument("--check", action="store_true", help="compare trace files")
+    task.add_argument("--all", action="store_true", help="gen, run, and check; needs all other flags defined")
 
     parser.add_argument("--num", help="number of tests")
     parser.add_argument("--size", help="size of each test")
-    parser.add_argument("--dir", help="destination to put tests")
 
-    parser.add_argument("--test_dir", help="where wasm tests are located")
+    parser.add_argument("--test_dir", help="where wasm tests are/should be located")
     parser.add_argument("--trace_dir", help="where traces file are/should be located")
     parser.add_argument("--os", help="the name of current os")
 
@@ -33,6 +34,7 @@ def get_args():
     return args
 
 def generate_tests(num, size, dir):
+  print("Generating {} tests with size {} at {}".format(num, size, dir))
   config = {
     "files": [
       {"path": "small.txt", "permission": "O_RDWR"},
@@ -74,19 +76,27 @@ def generate_tests(num, size, dir):
 
 
 def run_tests(test_dir, trace_dir, os):
+  print("Running tests")
   runtimes = ["wasmtime", "wasmer"]
   Execute(test_dir, trace_dir, runtimes, os, None)
+
+def check_traces(trace_dir):
+  print("Checking {}...".format(trace_dir))
+  fn = Check(trace_dir)
+  print("Report written to {}".format(fn))
 
 def main():
   args = get_args()
   if args.gen:
-    print("Generating {} tests with size {} at {}".format(args.num, args.size, args.dir))
-    generate_tests(int(args.num), int(args.size), args.dir)
+    generate_tests(int(args.num), int(args.size), args.test_dir)
   elif args.run:
-    print("Running tests")
     run_tests(args.test_dir, args.trace_dir, args.os)
   elif args.check:
-    print("Checking traces")
+    check_traces(args.trace_dir)
+  elif args.all:
+    generate_tests(int(args.num), int(args.size), args.test_dir)
+    run_tests(args.test_dir, args.trace_dir, args.os)
+    check_traces(args.trace_dir)
 
 if __name__ == "__main__":
   main()

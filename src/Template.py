@@ -20,3 +20,43 @@ int main(int argc, char * argv[]) {{
 	{}  
 }}
 """
+
+
+report_template="""
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+
+<head>
+    <meta http-equiv="Content-Type"
+          content="text/html; charset=utf-8" />
+    <title>WASIX Report</title>
+    <style type="text/css">
+      .wasix-clear {{
+        color: green;
+      }}
+      .wasix-error {{
+        color: red
+      }}
+
+      dl {{
+        display: table;
+        margin: 0 auto;
+      }}
+
+      p {{
+        text-align:center;
+      }}
+    </style>
+</head>
+
+<body>
+  <p>Report generated at {}</p>
+  <dl>
+    {}
+  </dl>
+</body>
+
+</html>
+"""
