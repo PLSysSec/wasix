@@ -1,5 +1,6 @@
 from pathlib import Path
 import subprocess
+import shutil
 
 def GetAllTests(test_dir):
   names = []
@@ -14,6 +15,13 @@ def Before(dir, name, config):
   working_dir = Path("{}/{}".format(dir, name))
   working_dir.mkdir(parents=True, exist_ok=True)
 
+  test_file_dir = Path("{}/test_files".format(Path(__file__).parent))
+  working_test_file_dir = Path("{}/test_files".format(working_dir))
+  working_test_file_dir.mkdir(parents=True, exist_ok=True)
+  for tfile in test_file_dir.iterdir():
+    if tfile.suffix == ".txt":
+      shutil.copy2(str(tfile), working_test_file_dir)
+
   print("Prepared {}".format(str(working_dir)))
   return str(working_dir)
 
@@ -22,6 +30,12 @@ def After(dir, runtime, os, name, process):
   if not old_trace.exists(): old_trace.touch()
   new_trace = Path("{}/{}_{}_{}.trace".format(dir, name, runtime, os))
   trace = old_trace.rename(new_trace)
+  f = open(trace, "a")
+  f.write("stdout:")
+  f.write(process.stdout)
+  f.write("stderr:")
+  f.write(process.stderr)
+  f.close()
 
   print("Generated {}".format(trace.name))
 
