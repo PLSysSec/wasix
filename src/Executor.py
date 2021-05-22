@@ -31,13 +31,30 @@ def After(dir, runtime, os, name, process):
   new_trace = Path("{}/{}_{}_{}.trace".format(dir, name, runtime, os))
   trace = old_trace.rename(new_trace)
   f = open(trace, "a")
-  f.write("stdout:")
+  f.write("********************** After Run Info **********************\n")
+  f.write("return code: {}\n".format(process.returncode))
+  f.write("stdout: \n")
   f.write(process.stdout)
-  f.write("stderr:")
-  f.write(process.stderr)
+  # f.write("stderr: \n")
+  # f.write(process.stderr)
+  collectTestFilesInfo(dir, f)
+  
   f.close()
 
   print("Generated {}".format(trace.name))
+
+def collectTestFilesInfo(dir, f):
+  f.write("test_files info\n")
+  tf_dir = Path("{}/test_files".format(dir))
+  for file in tf_dir.iterdir():
+    if file.is_file():
+      stat = file.stat()
+      f.write("{}:\n".format(file.name))
+      f.write("st_mode: {}\n".format(stat.st_mode))
+      f.write("st_nlink: {}\n".format(stat.st_nlink))
+      f.write("st_uid: {}\n".format(stat.st_uid))
+      f.write("st_gid: {}\n".format(stat.st_gid))
+      f.write("st_size: {}\n".format(stat.st_size))
 
 def RunOneTest(dir, name, test, runtime, os, config):
   working_dir = Before(dir, name, config)
