@@ -8,6 +8,13 @@ class Block:
     self.ret = ret
     self.fd = args[0] if len(args) > 0 else None
 
+  def copy(old, args = [], ret = None):
+    new = Block(old.syscall)
+    new.args = old.args if len(args) == 0 else args
+    new.ret = old.ret if ret == None else ret
+    new.fd = new.args[0] if len(new.args) > 0 else None
+    return new
+
   def getID(self):
     separator = ", "
     args_str = separator.join([str(i) for i in self.args])

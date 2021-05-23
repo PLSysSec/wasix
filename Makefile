@@ -32,6 +32,11 @@ check:
 	./src/wasix --check \
 		--trace_dir $(TRACE_DIR)
 
+bug-all: bug-comp bug-run bug-check
+
+bug-comp:
+	cd bug && make all
+
 bug-run:
 	./src/wasix --run \
 		--test_dir $(CURDIR)/bug/wasm \
@@ -42,7 +47,7 @@ bug-check:
 	./src/wasix --check \
 		--trace_dir $(CURDIR)/bug_trace \
 
-deep-clean:
+clean:
 	rm -rf test/
 	rm -rf trace/
 	rm -rf bug_trace

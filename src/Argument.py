@@ -1,9 +1,14 @@
 import random
 
 class Variable:
-  def __init__(self, type, name):
+  __count = 0
+
+  def __init__(self, type, name = "var"):
+    self.count = Variable.__count
+    Variable.__count += 1
     self.type = type
-    self.name = name
+    self.ori_name = name
+    self.name = "{}{}".format(name, self.count)
 
   def getDef(self):
     return "{} {}".format(str(self.type), str(self.name))

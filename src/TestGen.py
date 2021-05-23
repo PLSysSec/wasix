@@ -12,28 +12,10 @@ def TestGen(config, test_size):
     pool.popBlocks(removalFunc)
     test_blocks.append(block)
 
-  # TODO: Turn blocks to C code
   return test_blocks
   
 def InitBlockPool(config):
-  init = [
-    Block(SYSCALL.clock_getres),
-    Block(SYSCALL.clock_gettime),
-  ]
-
-  for env_var in config["env"]:
-    init.append(
-      Block(SYSCALL.getenv, env_var)
-    )
-
-  for i in range(len(config["files"])):
-    path = config["files"][i]["path"]
-    perm = config["files"][i]["permission"]
-    fn = "test_files/{}".format(path)
-    init.append(
-      Block(SYSCALL.open, fn, perm, ret = Variable("int", "fd{}".format(i)))
-    )
-
+  init = Constraint.getInitBlocks(config)
   pool = BlockPool()
   pool.addBlocks(init)
   return pool

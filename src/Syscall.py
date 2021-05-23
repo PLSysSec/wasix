@@ -1,5 +1,4 @@
 from Block import Block
-from Block import BlockPool
 from Argument import *
 
 class SYSCALL:
@@ -15,6 +14,26 @@ class SYSCALL:
 
 
 class Constraint:
+  def getInitBlocks(config):
+    init = [
+      Block(SYSCALL.clock_getres),
+      Block(SYSCALL.clock_gettime),
+    ]
+
+    for env_var in config["env"]:
+      init.append(
+        Block(SYSCALL.getenv, env_var)
+      )
+
+    for i in range(len(config["files"])):
+      path = config["files"][i]["path"]
+      perm = config["files"][i]["permission"]
+      fn = "test_files/{}".format(path)
+      init.append(
+        Block(SYSCALL.open, fn, perm, ret = Variable("int", name = "fd"))
+      )
+    return init
+
   def getCanFollow(prev : Block):
     canFollow = []
     if prev.syscall == SYSCALL.getenv: pass
@@ -54,8 +73,9 @@ class Constraint:
     if prev.syscall == SYSCALL.getenv: pass
     elif prev.syscall == SYSCALL.open:
       def handleOpen(pool):
-        # Prevent double open
         pool.pop(prev.getID(), None)
+        new_open = Block.copy(prev, ret = Variable("int", prev.ret.ori_name))
+        pool[new_open.getID()] = new_open
       return handleOpen
     elif prev.syscall == SYSCALL.read: pass
     elif prev.syscall == SYSCALL.write: pass
@@ -63,7 +83,6 @@ class Constraint:
     elif prev.syscall == SYSCALL.fstat: pass
     elif prev.syscall == SYSCALL.close:
       def handleClose(pool):
-        # TODO: can we enable reopen the same file again?
         for id, block in list(pool.items()):
           if(block.fd == prev.fd):
             pool.pop(id)
