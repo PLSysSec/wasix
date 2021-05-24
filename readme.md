@@ -57,31 +57,95 @@ To install [Wasmtime](https://github.com/bytecodealliance/wasmtime), run
 curl https://wasmtime.dev/install.sh -sSf | bash
 ```
 
+To use wasmtime, run
+```
+wasmtime *.wasm --dir <access file dir> 
+```
+
 ### Wasmer
 To install [wasmer](https://github.com/wasmerio/wasmer), run
 ```
 curl https://get.wasmer.io -sSfL | sh
 ```
 
-### Lucet
-To install [Lucet](https://github.com/bytecodealliance/lucet),
-TODO maybe look at [this](https://bytecodealliance.github.io/lucet/Overview.html)
+To use wasmer, run
+```
+wasmer *.wasm --dir <access file dir> 
+```
 
-### wasm2cli
-To install [wasm2cil](https://github.com/ericsink/wasm2cil),
-TODO .NET???
+### Lucet
+To install [Lucet](https://github.com/bytecodealliance/lucet), see [this](https://bytecodealliance.github.io/lucet/Compiling-on-Linux.html) and run 
+```
+# Install dependency
+sudo apt install curl ca-certificates cmake
+# Install Rust
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+source $HOME/.cargo/env
+# Install lucet
+git clone https://github.com/bytecodealliance/lucet.git
+cd lucet
+git submodule update --init --recursive
+# This is something ignored in the doc.
+sudo apt install libclang-dev
+export LLVM_CONFIG_PATH="<Your WASI SDK>/bin"
+export PATH="<Your WASI SDK>/bin:$PATH"
+make install
+```
+
+To use lucet, run 
+```
+source /opt/lucet/bin/setenv.sh
+lucetc-wasi -o *.so *.wasm
+lucet-wasi  *.so --dir  <wasm path>:<host path>
+#　e.g.  lucet-wasi  *.so --dir .:.
+```
+
+` Note1: Since it seems in the doc that method for Ubuntu19 and later version is different, please check the method for ` [Ubuntu20](https://bytecodealliance.github.io/lucet/Compiling-on-Linux.html) if you fail. 
+
+` Note2: Not fully understand the usage of the preopen directory in lucet, see more at ` [preopen](https://bytecodealliance.github.io/lucet/lucet-wasi.html) if you have any trouble. 
+
 
 ### WAVM
-To install [WAVM](https://github.com/WAVM/WAVM),
-TODO
+To install [WAVM](https://github.com/WAVM/WAVM),run
+```
+wget https://github.com/WAVM/WAVM/releases/download/nightly%2F2021-05-10/wavm-0.0.0-prerelease-linux.deb
+sudo apt install ./wavm-0.0.0-prerelease-linux.deb
+```
+
+To use WAVM, run
+```
+wavm run --mount-root <access file dir> *.wasm
+```
 
 ### Wasm3
-To install [Wasm3](https://github.com/wasm3/wasm3),
-TODO
+To install [Wasm3](https://github.com/wasm3/wasm3), run for MacOS
+```
+brew install wasm3
+```
+for linux run:
+```
+sudo apt install linuxbrew-wrapper
+export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
+brew install wasm3
+export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
+```
 
+Run ```wasm3 <file>``` for executing.
+
+Note: seems at this time wasm3 doesn't support fstat.
 ### WAMR
-To install [WAMR](https://github.com/wasm3/wasm3),
-TODO
+To install [WAMR](https://github.com/bytecodealliance/wasm-micro-runtime), to run
+```
+sudo apt install build-essential cmake g++-multilib libgcc-8-dev lib32gcc-8-dev
+git clone https://github.com/bytecodealliance/wasm-micro-runtime.git
+cd product-mini/platforms/linux/
+mkdir build
+cd build
+cmake ..
+make
+```
+
+The usage of [wamr](https://github.com/bytecodealliance/wasm-micro-runtime/tree/main/wamr-sdk) is very complex.
 
 # Usage
 
