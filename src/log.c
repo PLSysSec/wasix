@@ -1,3 +1,4 @@
+#include <libgen.h>
 #include "log.h"
 
 #define MAX_CALLBACKS 32
@@ -37,8 +38,8 @@ static void stdout_callback(log_Event *ev) {
     ev->file, ev->line);
 #else
   fprintf(
-    ev->udata, "%s %s:%d: ",
-    level_strings[ev->level], ev->file, ev->line);
+    ev->udata, "%s:%d: ",
+    ev->file, ev->line);
 #endif
   vfprintf(ev->udata, ev->fmt, ev->ap);
   fprintf(ev->udata, "\n");
@@ -49,8 +50,8 @@ static void stdout_callback(log_Event *ev) {
 static void file_callback(log_Event *ev) {
   char buf[64];
   fprintf(
-    ev->udata, "%s %s:%d: ",
-    level_strings[ev->level], ev->file, ev->line);
+    ev->udata, "%s:%d: ",
+      ev->file, ev->line);
   vfprintf(ev->udata, ev->fmt, ev->ap);
   fprintf(ev->udata, "\n");
   fflush(ev->udata);
@@ -113,10 +114,10 @@ static void init_event(log_Event *ev, void *udata) {
 }
 
 
-void log_log(int level, const char *file, int line, const char *fmt, ...) {
+void log_log(int level, char *file, int line, const char *fmt, ...) {
   log_Event ev = {
     .fmt   = fmt,
-    .file  = file,
+    .file  = basename(file),
     .line  = line,
     .level = level,
   };
