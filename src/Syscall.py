@@ -15,6 +15,7 @@ class SYSCALL:
 
 class Constraint:
   def getInitBlocks(config):
+    Variable.clear_count()
     init = [
       Block(SYSCALL.clock_getres),
       Block(SYSCALL.clock_gettime),
@@ -26,12 +27,13 @@ class Constraint:
     #   )
 
     for i in range(len(config["files"])):
-      path = config["files"][i]["path"]
-      perm = config["files"][i]["permission"]
-      fn = "test_files/{}".format(path)
-      init.append(
-        Block(SYSCALL.open, fn, perm, ret = Variable("int", name = "fd"))
-      )
+      file = config["files"][i]
+      path = file["path"]
+      for flag in file["flags"]:
+        fn = "test_files/{}".format(path)
+        init.append(
+          Block(SYSCALL.open, fn, flag, ret = Variable("int", name = "fd"))
+        )
     return init
 
   def getCanFollow(prev : Block):

@@ -28,12 +28,21 @@ def setup_environment(dir, name, config):
   test_file_dir = Path("{}/test_files".format(Path(__file__).parent))
   working_test_file_dir = Path("{}/test_files".format(working_dir))
   working_test_file_dir.mkdir(parents=True, exist_ok=True)
+  clean_dir(working_test_file_dir)
   for tfile in test_file_dir.iterdir():
     if tfile.suffix == ".txt":
       shutil.copy2(str(tfile), working_test_file_dir)
 
   print("Prepared {}".format(str(working_dir)))
   return str(working_dir)
+
+def clean_dir(d):
+  for p in d.iterdir():
+    if p.is_file():
+      p.unlink()
+    elif p.is_dir():
+      clean_dir(p)
+      p.rmdir()
 
 def collect_after_run_info(dir, runtime, os, test_name, config, process):
   old_trace = Path("{}/{}.trace".format(dir, test_name))

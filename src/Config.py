@@ -40,11 +40,19 @@ def getConfig():
       # }
     ],
     "files": [
-      {"path": "small.txt", "permission": "O_RDWR"},
-      # {"path": "small.txt", "permission": "O_RDONLY"},
-      {"path": "medium.txt", "permission": "O_RDWR"},
-      {"path": "large.txt", "permission": "O_RDWR"},
-      {"path": "not_exist.txt", "permission": "O_RDWR"},
+      {"path": "small.txt", "flags": ["O_RDWR",
+                                      "O_RDONLY",
+                                      "O_WRONLY",
+                                      "O_RDWR | O_CREAT | O_EXCL",
+                                      "O_RDWR | O_TRUNC",
+                                      # "O_RDWR | O_PATH",
+                                     ]},
+      # {"path": "medium.txt", "flags": ["O_RDWR"]},
+      # {"path": "large.txt", "flags": ["O_RDWR"]},
+      {"path": "not_exist.txt", "flags": ["O_RDWR",
+                                          "O_RDWR | O_CREAT",
+                                          "O_RDWR | O_CREAT | O_EXCL",
+                                         ]},
     ],
     "env": ["ENV_VAR_1", "ENV_VAR_2"]
   }

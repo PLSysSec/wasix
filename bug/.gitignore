@@ -1,2 +1,4 @@
 test_files/
 wasm/
+*.out
+*.so

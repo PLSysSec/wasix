@@ -27,6 +27,7 @@ all: $(OBJS)
 
 cp:
 	mkdir -p $(CURDIR)/test_files
+	rm -rf test_files/*
 	cp $(CURDIR)/../src/test_files/* $(CURDIR)/test_files/
 
 clean:

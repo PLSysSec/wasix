@@ -18,6 +18,9 @@ class Variable:
 
   def __str__(self):
     return "{}_{}".format(str(self.type), str(self.name))
+  
+  def clear_count():
+    Variable.__count = 0
 
 class Integer:
   def __init__(self, val):
