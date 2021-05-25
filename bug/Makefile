@@ -31,4 +31,5 @@ clean:
 	rm -rf *.wat
 	rm -rf *.out
 	rm -rf wasm/*.wasm
+	rm -rf wasm/*.so
 

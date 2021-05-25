@@ -49,7 +49,7 @@ def BlockToCode(i, block):
     code = [
       "struct stat {};".format(statName),
       "fstat({}, &{});".format(block.args[0].getRef(), statName),
-      "log_trace(\"stat info mode %u size %d\", {}.st_mode, {}.st_size);".format(statName, statName)
+      "log_trace(\"stat info size %d\", {}.st_size);".format(statName)
     ]
     return SEP.join(code)
   elif block.syscall == SYSCALL.close:

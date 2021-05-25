@@ -1,16 +1,11 @@
 #!/usr/bin/env python3
 
 import argparse
-import secrets
-import subprocess
-import os
 
-from pathlib import Path
+from Config import getConfig
 from Executor import Execute
 from Checker import Check
-
 from TestGen import TestGen
-from CodeGen import CodeGen
 
 def get_args():
     parser = argparse.ArgumentParser(description='A differential testing tool for WASI-compatible WASM runtimes')
@@ -31,40 +26,9 @@ def get_args():
     args = parser.parse_args()
     return args
 
-def generate_tests(num, size, dir, config):
-  print("Generating {} tests with size {} at {}".format(num, size, dir))
-
-  Path(dir).mkdir(parents=True, exist_ok=True)
-  for i in range(num):
-    blocks = TestGen(config, size)
-    print("Generated test#{}:".format(i))
-
-    n = secrets.token_hex(8)
-    fn ="{}/{}.c".format(dir, n)
-    f = open(fn, "w")
-    f.write(CodeGen(blocks, n))
-    f.flush()
-    print("Stored into {}".format(fn))
-
-    wn = "{}/{}.wasm".format(dir, n)
-    sdk = os.getenv('WASI_SDK_PATH')
-    wasix = os.path.dirname(__file__)
-    bin = "{}/bin/clang".format(sdk)
-    root = "--sysroot={}/share/wasi-sysroot".format(sdk)
-    include = "-I{}".format(wasix)
-    # cmd = [bin, root, include, fn, "-o", wn]
-    # print(" ".join(cmd))
-    p = subprocess.run([bin, root, include, fn, "-o", wn], universal_newlines=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    if not p.returncode == 0:
-      print("Compilation failed for {}".format(fn))
-      print(p.stdout)
-      print(p.stderr)
-    else:
-      print("Compiled to {}".format(wn))
-
-  # for b in blocks:
-  #   print("\t{}".format(b.getID()))
-
+def generate_tests(num, size, test_dir, config):
+  print("Generating {} tests with size {} at {}".format(num, size, test_dir))
+  TestGen(num, size, test_dir, config)
 
 def run_tests(test_dir, trace_dir, os, config):
   print("Running tests")
@@ -74,20 +38,6 @@ def check_traces(trace_dir):
   print("Checking {}...".format(trace_dir))
   fn = Check(trace_dir)
   print("Report written to {}".format(fn))
-
-def getConfig():
-  config = {
-    "runtimes": ["wasmtime", "wasmer"],
-    "files": [
-      {"path": "small.txt", "permission": "O_RDWR"},
-      {"path": "small.txt", "permission": "O_RDONLY"},
-      {"path": "medium.txt", "permission": "O_RDWR"},
-      {"path": "large.txt", "permission": "O_RDWR"},
-      {"path": "not_exist.txt", "permission": "O_RDWR"},
-    ],
-    "env": ["ENV_VAR_1", "ENV_VAR_2"]
-  }
-  return config
 
 def main():
   args = get_args()

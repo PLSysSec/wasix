@@ -8,6 +8,9 @@ OS   ?= not_specified
 NUM  ?= 10
 SIZE ?= 30
 
+export ENV_VAR_1 = this/is/env/var/1
+export ENV_VAR_2 = this.is.env.var.2
+
 all:
 	./src/wasix --all \
 		--num $(NUM) \
@@ -50,4 +53,5 @@ bug-check:
 clean:
 	rm -rf test/
 	rm -rf trace/
-	rm -rf bug_trace
+	rm -rf bug_trace/
+	cd bug && make clean
