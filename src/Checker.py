@@ -55,14 +55,18 @@ def CheckOneTest(dir, time):
         t2 = traces[j]
         if not filecmp.cmp(t1, t2, shallow=False):
           cmp_name = "{}_vs_{}".format(names[i], names[j])
-          html_name = "{}/{}_{}.html".format(
-            dir, cmp_name, int(datetime.timestamp(time)))
-          f = open(html_name, "w")
+          html_name = "{}_{}.html".format(cmp_name, int(datetime.timestamp(time)))
+          full_path = "{}/{}".format(dir, html_name)
+          rel_path = "{}/{}".format(test_name, html_name)
+          # html_name = "{}/{}_{}.html".format(
+          #   dir, cmp_name, int(datetime.timestamp(time)))
+          f = open(full_path, "w")
           html = HtmlDiff().make_file(t1.open().readlines(), t2.open().readlines())
           f.write(html)
           f.close()
+          # rel_path = "{}/{}_{}.html".format(test_name, cmp_name, int(datetime.timestamp(time)))
           report["htmls"].append({
             "name": cmp_name,
-            "path": html_name
+            "path": rel_path 
           })
   return report
