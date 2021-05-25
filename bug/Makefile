@@ -8,7 +8,7 @@ CC     = clang
 .PRECIOUS: %.wasm
 
 SRCS=$(wildcard *.c)
-OBJS=$(SRCS:.c=.wasm)
+OBJS=$(SRCS:.c=.so)
 
 all: $(OBJS)
 
@@ -18,6 +18,9 @@ all: $(OBJS)
 %.wasm: %.c
 	mkdir -p $(CURDIR)/wasm
 	$(WC) $(WCFLAG) $< -o wasm/$@
+
+%.so: %.wasm
+	lucetc-wasi wasm/$< -o wasm/$@
 
 %.out: %.c
 	$(CC) $< -o $@
