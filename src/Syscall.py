@@ -21,10 +21,10 @@ class Constraint:
       Block(SYSCALL.clock_gettime),
     ]
 
-    # for env_var in config["env"]:
-    #   init.append(
-    #     Block(SYSCALL.getenv, env_var)
-    #   )
+    for env_var in config["env"]:
+      init.append(
+        Block(SYSCALL.getenv, env_var)
+      )
 
     for i in range(len(config["files"])):
       file = config["files"][i]
@@ -52,12 +52,12 @@ class Constraint:
         Block(SYSCALL.write, fd, Buffer.GLOBAL_WBUF, Integer(4096)),
         Block(SYSCALL.write, fd, Buffer.GLOBAL_WBUF, RandomInteger(0, 4096)),
 
-        # Block(SYSCALL.posix_fallocate, fd, Integer(0), Integer(0)),
-        # Block(SYSCALL.posix_fallocate, fd, Integer(0), Integer(1)),
-        # Block(SYSCALL.posix_fallocate, fd, Integer(0), Integer(4096)),
-        # Block(SYSCALL.posix_fallocate, fd, Integer(0), RandomInteger(0, 4096)),
+        Block(SYSCALL.posix_fallocate, fd, Integer(0), Integer(0)),
+        Block(SYSCALL.posix_fallocate, fd, Integer(0), Integer(1)),
+        Block(SYSCALL.posix_fallocate, fd, Integer(0), Integer(4096)),
+        Block(SYSCALL.posix_fallocate, fd, Integer(0), RandomInteger(0, 4096)),
 
-        # Block(SYSCALL.fstat, fd),
+        Block(SYSCALL.fstat, fd),
         Block(SYSCALL.close, fd)
       ]
     elif prev.syscall == SYSCALL.read: pass
@@ -77,7 +77,7 @@ class Constraint:
       def handleOpen(pool):
         pool.pop(prev.getID(), None)
         new_open = Block.copy(prev, ret = Variable("int", prev.ret.ori_name))
-        # pool[new_open.getID()] = new_open
+        pool[new_open.getID()] = new_open
       return handleOpen
     elif prev.syscall == SYSCALL.read: pass
     elif prev.syscall == SYSCALL.write: pass
