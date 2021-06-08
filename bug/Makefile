@@ -4,6 +4,7 @@
 WC     = $(WASI_SDK_PATH)/bin/clang
 WCFLAG = --sysroot=$(WASI_SDK_PATH)/share/wasi-sysroot
 CC     = clang
+CFLAG  = -I$(CURDIR)/../src
 
 .PRECIOUS: %.wasm
 
@@ -17,7 +18,7 @@ all: $(OBJS)
 
 %.wasm: %.c
 	mkdir -p $(CURDIR)/wasm
-	$(WC) $(WCFLAG) $< -o wasm/$@
+	$(WC) $(WCFLAG) $(CFLAG) $< -o wasm/$@
 
 %.so: %.wasm
 	lucetc-wasi wasm/$< -o wasm/$@
