@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
+import os
 
 from Config import getConfig
 from Executor import Execute
@@ -42,6 +43,8 @@ def check_traces(trace_dir):
 def main():
   args = get_args()
   config = getConfig()
+  if args.test_dir: args.test_dir = os.path.abspath(args.test_dir)
+  if args.trace_dir: args.trace_dir = os.path.abspath(args.trace_dir)
   if args.gen:
     generate_tests(int(args.num), int(args.size), args.test_dir, config)
   elif args.run:
