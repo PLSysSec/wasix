@@ -1,11 +1,13 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.8
 
 import argparse
+import time
 
 from Config import getConfig
 from Executor import Execute
 from Checker import Check
 from TestGen import TestGen
+
 
 def get_args():
     parser = argparse.ArgumentParser(description='A differential testing tool for WASI-compatible WASM runtimes')
@@ -28,7 +30,10 @@ def get_args():
 
 def generate_tests(num, size, test_dir, config):
   print("Generating {} tests with size {} at {}".format(num, size, test_dir))
+  start_time = time.time()
   TestGen(num, size, test_dir, config)
+  end_time = time.time()
+  print("@Test Gen time:%.6f"%(end_time-start_time))
 
 def run_tests(test_dir, trace_dir, os, config):
   print("Running tests")

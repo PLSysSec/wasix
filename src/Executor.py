@@ -1,6 +1,7 @@
 from pathlib import Path
 import subprocess
 import shutil
+import time
 
 def Execute(test_dir, out_dir, runtimes, os, config):
   for test_name, test_path in get_all_tests(test_dir):
@@ -9,6 +10,7 @@ def Execute(test_dir, out_dir, runtimes, os, config):
 
 
 def run_one_test(dir, test_name, test_path, runtime, os, config):
+  start_CPU_time = time.time()
   working_dir = setup_environment(dir, test_name, config)
   print("Running {} with {}".format(test_name, runtime["name"]))
 
@@ -18,7 +20,8 @@ def run_one_test(dir, test_name, test_path, runtime, os, config):
   for cmd in runtime["getCmds"](accessible_dir, test_path):
     p = subprocess.run(cmd, cwd=working_dir,
       universal_newlines=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-  collect_after_run_info(working_dir, runtime, os, test_name, config, p)
+  collect_after_run_info(working_dir, runtime, os, test_name, config, p, start_CPU_time)
+  
  
 
 def setup_environment(dir, name, config):
@@ -44,7 +47,7 @@ def clean_dir(d):
       clean_dir(p)
       p.rmdir()
 
-def collect_after_run_info(dir, runtime, os, test_name, config, process):
+def collect_after_run_info(dir, runtime, os, test_name, config, process, start_CPU_time):
   old_trace = Path("{}/{}.trace".format(dir, test_name))
   if not old_trace.exists(): old_trace.touch()
   new_trace = Path("{}/{}_{}_{}.trace".format(dir, test_name, runtime["name"], os))
@@ -54,6 +57,8 @@ def collect_after_run_info(dir, runtime, os, test_name, config, process):
   f.write(sep_line("After Run Info"))
   collect_proc_info(config, process, f)
   collect_test_files(config, dir, f)
+  end_CPU_time = time.time()
+  f.write("$Time(CPU seconds):%f\r\n" % (end_CPU_time - start_CPU_time))
   f.close()
 
   print("Generated {}".format(trace.name))

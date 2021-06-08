@@ -1,0 +1,8 @@
+./src/wasix --gen \
+	--num 1 \
+	--size 10000 \
+	--test_dir /home/zhma/227/227-wasm/test
+Generating 1 tests with size 10000 at /home/zhma/227/227-wasm/test
+Test #0 stored into /home/zhma/227/227-wasm/test/490fe0b17682679e.c
+WASM: Compiled to /home/zhma/227/227-wasm/test/490fe0b17682679e.wasm
+@Test Gen time:16.261801
