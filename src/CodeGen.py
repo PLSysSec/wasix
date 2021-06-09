@@ -101,3 +101,12 @@ def BlockToCode(i, block):
       'syscallCnt++; if(syscallRet==-1) badSyscallCnt++;'
     ]
     return SEP.join(code)
+  elif block.syscall == SYSCALL.lseek:
+    code = [
+      "lseekRet = lseek({}, {}, {});".format(
+        block.args[0].getRef(), block.args[1].getValueStr(), block.args[2]
+      ),
+      "log_trace(\"lseek returns: %d\", lseekRet);",
+      'syscallCnt++; if(lseekRet==-1) badSyscallCnt++;'
+    ]
+    return SEP.join(code)

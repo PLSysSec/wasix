@@ -19,6 +19,7 @@ int main(int argc, char * argv[]) {{
 
 	int readRet = 0;
 	int writeRet = 0;
+	int lseekRet = 0;
   int syscallCnt = 0;
   int badSyscallCnt = 0;
   int syscallRet = 0;

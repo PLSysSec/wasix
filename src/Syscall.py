@@ -11,6 +11,7 @@ class SYSCALL:
   close           = "close"
   clock_getres    = "clock_getres"
   clock_gettime   = "clock_gettime"
+  lseek           = "lseek"
 
 
 class Constraint:
@@ -56,6 +57,13 @@ class Constraint:
         Block(SYSCALL.posix_fallocate, fd, Integer(0), Integer(1)),
         Block(SYSCALL.posix_fallocate, fd, Integer(0), Integer(4096)),
         Block(SYSCALL.posix_fallocate, fd, Integer(0), RandomInteger(0, 4096)),
+
+        Block(SYSCALL.lseek, fd, Integer(0), "SEEK_SET"),
+        Block(SYSCALL.lseek, fd, RandomInteger(0, 512), "SEEK_SET"),
+        Block(SYSCALL.lseek, fd, Integer(0), "SEEK_CUR"),
+        Block(SYSCALL.lseek, fd, RandomInteger(0, 512), "SEEK_CUR"),
+        Block(SYSCALL.lseek, fd, Integer(0), "SEEK_END"),
+        Block(SYSCALL.lseek, fd, RandomInteger(0, 512), "SEEK_END"),
 
         Block(SYSCALL.fstat, fd),
         Block(SYSCALL.close, fd)
