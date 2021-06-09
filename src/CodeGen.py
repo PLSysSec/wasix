@@ -110,3 +110,12 @@ def BlockToCode(i, block):
       'syscallCnt++; if(lseekRet==-1) badSyscallCnt++;'
     ]
     return SEP.join(code)
+  elif block.syscall == SYSCALL.ftruncate:
+    code = [
+      "syscallRet = ftruncate({}, {});".format(
+        block.args[0].getRef(), block.args[1].getValueStr()
+      ),
+      "log_trace(\"ftruncate returns: %d\", syscallRet);",
+      'syscallCnt++; if(lseekRet==-1) badSyscallCnt++;'
+    ]
+    return SEP.join(code)
