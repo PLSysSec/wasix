@@ -104,6 +104,8 @@ class Constraint:
 
     elif prev.syscall == SYSCALL.clock_getres: pass
     elif prev.syscall == SYSCALL.clock_gettime: pass
+    elif prev.syscall == SYSCALL.lseek: pass
+    elif prev.syscall == SYSCALL.ftruncate: pass
     return Constraint.__noRemove
   def __noRemove(_): return
     
