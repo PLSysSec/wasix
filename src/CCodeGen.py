@@ -129,3 +129,17 @@ def BlockToCode(i, block):
       'syscallCnt++; if(lseekRet==-1) badSyscallCnt++;'
     ]
     return SEP.join(code)
+  elif block.syscall == SYSCALL.fdatasync:
+    code = [
+      "syscallRet = fdatasync({});".format(block.args[0].getRef()),
+      "log_trace(\"ftruncate returns: %d\", syscallRet);",
+      'syscallCnt++; if(lseekRet==-1) badSyscallCnt++;'
+    ]
+    return SEP.join(code)
+  elif block.syscall == SYSCALL.fsync:
+    code = [
+      "syscallRet = fsync({});".format(block.args[0].getRef()),
+      "log_trace(\"ftruncate returns: %d\", syscallRet);",
+      'syscallCnt++; if(lseekRet==-1) badSyscallCnt++;'
+    ]
+    return SEP.join(code)

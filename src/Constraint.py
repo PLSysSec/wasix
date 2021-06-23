@@ -61,6 +61,8 @@ class Constraint:
         Block(SYSCALL.ftruncate, fd, Integer(0)),
         Block(SYSCALL.ftruncate, fd, RandomInteger(0, 8192)),
 
+        Block(SYSCALL.fdatasync, fd),
+        Block(SYSCALL.fsync, fd),
         Block(SYSCALL.fstat, fd),
         Block(SYSCALL.close, fd)
       ]
