@@ -70,7 +70,9 @@ class Constraint:
         Block(SYSCALL.fdatasync, fd),
         Block(SYSCALL.fsync, fd),
         Block(SYSCALL.fstat, fd),
-        Block(SYSCALL.close, fd)
+        Block(SYSCALL.close, fd),
+
+        # Block(SYSCALL.dup2, fd, RandomInteger(0,64), ret = Variable("int", name = "fd")),
       ]
     elif prev.syscall == SYSCALL.read: pass
     elif prev.syscall == SYSCALL.write: pass
@@ -79,6 +81,7 @@ class Constraint:
     elif prev.syscall == SYSCALL.close: pass
     elif prev.syscall == SYSCALL.clock_getres: pass
     elif prev.syscall == SYSCALL.clock_gettime: pass
+    elif prev.syscall == SYSCALL.dup2: pass
 
     return canFollow
 
@@ -106,5 +109,19 @@ class Constraint:
     elif prev.syscall == SYSCALL.clock_gettime: pass
     elif prev.syscall == SYSCALL.lseek: pass
     elif prev.syscall == SYSCALL.ftruncate: pass
+    elif prev.syscall == SYSCALL.dup2:
+      # remove all operations using the old fd
+      def handleDup2(pool):
+        pool.pop(prev.getID(), None)
+        new_dup = Block.copy(prev, ret = Variable("int", prev.ret.ori_name))
+        pool[new_dup.getID()] = new_dup
+        for id, block in list(pool.items()):
+          if(block.fd == prev.args[0]):
+            old = pool.pop(id)
+            new_args = old.args[:]
+            new_args[0] = prev.ret
+            new = Block.copy(old, args=new_args)
+            pool[new.getID()] = new
+      return handleDup2
     return Constraint.__noRemove
   def __noRemove(_): return

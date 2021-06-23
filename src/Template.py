@@ -8,6 +8,7 @@ plain_c_template = """
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/uio.h>
+#include <unistd.h>
 #include "log.c"
 
 int main(int argc, char * argv[]) {{

@@ -168,3 +168,10 @@ def BlockToCode(i, block):
       syscallCntCode
     ]
     return SEP.join(code)
+  elif block.syscall == SYSCALL.dup2:
+    code = [
+      "{} = dup2({}, {});".format(
+        block.ret.getDef(),
+        block.args[0].getRef(), block.args[1].getValueStr()),
+    ]
+    return SEP.join(code)

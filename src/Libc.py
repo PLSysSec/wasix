@@ -18,3 +18,4 @@ class SYSCALL:
   fsync           = "fsync"
   pread           = "pread"
   pwrite          = "pwrite"
+  dup2            = "dup2"
