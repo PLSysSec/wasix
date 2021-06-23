@@ -1,19 +1,6 @@
 from Block import Block
+from Libc import SYSCALL 
 from Argument import *
-
-class SYSCALL:
-  getenv          = "getenv"
-  open            = "open"
-  read            = "read"
-  write           = "write"
-  posix_fallocate = "posix_fallocate"
-  fstat           = "fstat"
-  close           = "close"
-  clock_getres    = "clock_getres"
-  clock_gettime   = "clock_gettime"
-  lseek           = "lseek"
-  ftruncate       = "ftruncate"
-
 
 class Constraint:
   def getInitBlocks(config):
@@ -108,4 +95,3 @@ class Constraint:
     elif prev.syscall == SYSCALL.ftruncate: pass
     return Constraint.__noRemove
   def __noRemove(_): return
-    

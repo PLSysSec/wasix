@@ -4,9 +4,9 @@ import os
 
 from pathlib import Path
 
-from CodeGen import CodeGen
+from CCodeGen import CCodeGen
 from Block import BlockPool 
-from Syscall import Constraint
+from Constraint import Constraint
 
 def TestGen(num, size, test_dir, config):
   Path(test_dir).mkdir(parents=True, exist_ok=True)
@@ -17,7 +17,7 @@ def TestGen(num, size, test_dir, config):
     n = secrets.token_hex(8)
     fn ="{}/{}.c".format(test_dir, n)
     f = open(fn, "w")
-    f.write(CodeGen(blocks, n))
+    f.write(CCodeGen(blocks, n))
     f.flush()
     print("Test #{} stored into {}".format(i, fn))
 

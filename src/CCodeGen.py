@@ -1,9 +1,9 @@
-from Syscall import SYSCALL
+from Libc import SYSCALL
 from Template import *
 
 SEP = "\n\t"
 
-def CodeGen(blocks, fileName):
+def CCodeGen(blocks, fileName):
   code = [
     "FILE *fp = fopen(\"{0}.trace\", \"w\");".format(fileName),
     "log_add_fp(fp, LOG_TRACE);"
