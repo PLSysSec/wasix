@@ -115,7 +115,7 @@ def BlockToCode(i, block):
         block.args[0].getRef(), block.args[1].getValueStr()
       ),
       "log_trace(\"ftruncate returns: %d\", syscallRet);",
-      'syscallCnt++; if(lseekRet==-1) badSyscallCnt++;'
+      'syscallCnt++; if(syscallRet==-1) badSyscallCnt++;'
     ]
     return SEP.join(code)
   elif block.syscall == SYSCALL.posix_fadvise:
@@ -124,22 +124,22 @@ def BlockToCode(i, block):
         block.args[0].getRef(), block.args[1].getValueStr(),
         block.args[2].getValueStr(), block.args[3].getValueStr()
       ),
-      "log_trace(\"ftruncate returns: %d\", syscallRet);",
-      'syscallCnt++; if(lseekRet==-1) badSyscallCnt++;'
+      "log_trace(\"posix_fadvise returns: %d\", syscallRet);",
+      'syscallCnt++; if(syscallRet==-1) badSyscallCnt++;'
     ]
     return SEP.join(code)
   elif block.syscall == SYSCALL.fdatasync:
     code = [
       "syscallRet = fdatasync({});".format(block.args[0].getRef()),
-      "log_trace(\"ftruncate returns: %d\", syscallRet);",
-      'syscallCnt++; if(lseekRet==-1) badSyscallCnt++;'
+      "log_trace(\"fdatasync returns: %d\", syscallRet);",
+      'syscallCnt++; if(syscallRet==-1) badSyscallCnt++;'
     ]
     return SEP.join(code)
   elif block.syscall == SYSCALL.fsync:
     code = [
       "syscallRet = fsync({});".format(block.args[0].getRef()),
-      "log_trace(\"ftruncate returns: %d\", syscallRet);",
-      'syscallCnt++; if(lseekRet==-1) badSyscallCnt++;'
+      "log_trace(\"fsync returns: %d\", syscallRet);",
+      'syscallCnt++; if(syscallRet==-1) badSyscallCnt++;'
     ]
     return SEP.join(code)
   elif block.syscall == SYSCALL.pread:
@@ -173,5 +173,78 @@ def BlockToCode(i, block):
       "{} = dup2({}, {});".format(
         block.ret.getDef(),
         block.args[0].getRef(), block.args[1].getValueStr()),
+    ]
+    return SEP.join(code)
+  elif block.syscall == SYSCALL.mkdirat:
+    code = [
+      "syscallRet = mkdirat({}, {}, {});".format(
+        block.args[0].getRef(),
+        block.args[1].getValueStr(), block.args[2].getValueStr()),
+      "log_trace(\"mkdirat returns: %d\", syscallRet);",
+      'syscallCnt++; if(syscallRet==-1) badSyscallCnt++;'
+    ]
+    return SEP.join(code)
+  elif block.syscall == SYSCALL.linkat:
+    code = [
+      "syscallRet = linkat({}, {}, {}, {}, {});".format(
+        block.args[0].getRef(), block.args[1].getValueStr(),
+        block.args[2].getRef(), block.args[3].getValueStr(),
+        block.args[4].getValueStr()),
+      "log_trace(\"linkat returns: %d\", syscallRet);",
+      'syscallCnt++; if(syscallRet==-1) badSyscallCnt++;'
+    ]
+    return SEP.join(code)
+  elif block.syscall == SYSCALL.openat:
+    code = [
+      "syscallRet = openat({}, {}, {}, {});".format(
+        block.args[0].getRef(), block.args[1].getValueStr(),
+        block.args[2].getValueStr(), block.args[3].getValueStr()),
+      "log_trace(\"openat returns: %d\", syscallRet);",
+      'syscallCnt++; if(syscallRet==-1) badSyscallCnt++;'
+    ]
+    return SEP.join(code)
+  elif block.syscall == SYSCALL.readlinkat:
+    code = [
+      "syscallRet = readlinkat({}, {}, {}, {});".format(
+        block.args[0].getRef(), block.args[1].getValueStr(),
+        block.args[2].getValueStr(), block.args[3].getValueStr()),
+      "log_trace(\"readlinkat returns: %d\", syscallRet);",
+      'syscallCnt++; if(syscallRet==-1) badSyscallCnt++;'
+    ]
+    return SEP.join(code)
+  elif block.syscall == SYSCALL.unlinkat:
+    code = [
+      "syscallRet = unlinkat({}, {}, {});".format(
+        block.args[0].getRef(), block.args[1].getValueStr(),
+        block.args[2].getValueStr()),
+      "log_trace(\"unlinkat returns: %d\", syscallRet);",
+      'syscallCnt++; if(syscallRet==-1) badSyscallCnt++;'
+    ]
+    return SEP.join(code)
+  elif block.syscall == SYSCALL.renameat:
+    code = [
+      "syscallRet = renameat({}, {}, {}, {});".format(
+        block.args[0].getRef(), block.args[1].getValueStr(),
+        block.args[2].getRef(), block.args[3].getValueStr()),
+      "log_trace(\"renameat returns: %d\", syscallRet);",
+      'syscallCnt++; if(syscallRet==-1) badSyscallCnt++;'
+    ]
+    return SEP.join(code)
+  elif block.syscall == SYSCALL.renameat:
+    code = [
+      "syscallRet = renameat({}, {}, {}, {});".format(
+        block.args[0].getRef(), block.args[1].getValueStr(),
+        block.args[2].getRef(), block.args[3].getValueStr()),
+      "log_trace(\"renameat returns: %d\", syscallRet);",
+      'syscallCnt++; if(syscallRet==-1) badSyscallCnt++;'
+    ]
+    return SEP.join(code)
+  elif block.syscall == SYSCALL.symlinkat:
+    code = [
+      "syscallRet = symlinkat({}, {}, {});".format(
+        block.args[0].getValueStr(), block.args[1].getRef(),
+        block.args[2].getValueStr()),
+      "log_trace(\"renameat returns: %d\", syscallRet);",
+      'syscallCnt++; if(syscallRet==-1) badSyscallCnt++;'
     ]
     return SEP.join(code)

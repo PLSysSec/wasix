@@ -52,17 +52,17 @@ class Constraint:
         Block(SYSCALL.posix_fallocate, fd, Integer(0), Integer(4096)),
         Block(SYSCALL.posix_fallocate, fd, Integer(0), RandomInteger(0, 4096)),
 
-        Block(SYSCALL.lseek, fd, Integer(0), StringGroup("position", [
+        Block(SYSCALL.lseek, fd, Integer(0), ValueGroup([
           "SEEK_SET", "SEEK_CUR", "SEEK_END"
-        ])),
-        Block(SYSCALL.lseek, fd, RandomInteger(0, 512), StringGroup("position", [
+        ], name="position")),
+        Block(SYSCALL.lseek, fd, RandomInteger(0, 512), ValueGroup([
           "SEEK_SET", "SEEK_CUR", "SEEK_END"
-        ])),
+        ], name="position")),
 
         Block(SYSCALL.posix_fadvise, fd, RandomInteger(0,512), RandomInteger(0, 512),
-          StringGroup("advice", [
+          ValueGroup([
             "POSIX_FADV_NORMAL", "POSIX_FADV_SEQUENTIAL", "POSIX_FADV_RANDOM", "POSIX_FADV_NOREUSE",
-            "POSIX_FADV_WILLNEED", "POSIX_FADV_DONTNEED"])),
+            "POSIX_FADV_WILLNEED", "POSIX_FADV_DONTNEED"], name="advice")),
 
         Block(SYSCALL.ftruncate, fd, Integer(0)),
         Block(SYSCALL.ftruncate, fd, RandomInteger(0, 8192)),
@@ -73,6 +73,13 @@ class Constraint:
         Block(SYSCALL.close, fd),
 
         # Block(SYSCALL.dup2, fd, RandomInteger(0,64), ret = Variable("int", name = "fd")),
+        # Block(SYSCALL.mkdirat, fd, RandomString(8), ValueGroup(["S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH"])),
+        # Block(SYSCALL.linkat, fd, RandomString(8), fd, RandomString(8), Integer(0)),
+        # Block(SYSCALL.openat, fd, RandomString(8), Integer(0), Integer(0)),
+        # Block(SYSCALL.readlinkat, fd, RandomString(8), Buffer.GLOBAL_RBUF, RandomInteger(0, 4096)),
+        # Block(SYSCALL.unlinkat, fd, RandomString(8), Integer(0)),
+        # Block(SYSCALL.renameat, fd, RandomString(8), fd, RandomString(8)),
+        # Block(SYSCALL.symlinkat, RandomString(8), fd, RandomString(8))
       ]
     elif prev.syscall == SYSCALL.read: pass
     elif prev.syscall == SYSCALL.write: pass
