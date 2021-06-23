@@ -36,10 +36,16 @@ class Constraint:
         Block(SYSCALL.read, fd, Buffer.GLOBAL_RBUF, Integer(4096)),
         Block(SYSCALL.read, fd, Buffer.GLOBAL_RBUF, RandomInteger(0, 4096)),
 
+        Block(SYSCALL.pread, fd, Buffer.GLOBAL_RBUF, Integer(0), RandomInteger(0, 4096)),
+        Block(SYSCALL.pread, fd, Buffer.GLOBAL_RBUF, RandomInteger(0, 4096), RandomInteger(0, 4096)),
+
         Block(SYSCALL.write, fd, Buffer.GLOBAL_WBUF, Integer(0)),
         Block(SYSCALL.write, fd, Buffer.GLOBAL_WBUF, Integer(1)),
         Block(SYSCALL.write, fd, Buffer.GLOBAL_WBUF, Integer(4096)),
         Block(SYSCALL.write, fd, Buffer.GLOBAL_WBUF, RandomInteger(0, 4096)),
+
+        Block(SYSCALL.pwrite, fd, Buffer.GLOBAL_WBUF, Integer(0), RandomInteger(0, 4096)),
+        Block(SYSCALL.pwrite, fd, Buffer.GLOBAL_WBUF, RandomInteger(0, 4096), RandomInteger(0, 4096)),
 
         Block(SYSCALL.posix_fallocate, fd, Integer(0), Integer(0)),
         Block(SYSCALL.posix_fallocate, fd, Integer(0), Integer(1)),

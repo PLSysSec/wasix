@@ -16,3 +16,5 @@ class SYSCALL:
   posix_fadvise   = "posix_fadvise"
   fdatasync       = "fdatasync"
   fsync           = "fsync"
+  pread           = "pread"
+  pwrite          = "pwrite"

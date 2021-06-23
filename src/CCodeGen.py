@@ -34,7 +34,6 @@ def BlockToCode(i, block):
     ]
     return SEP.join(code)
   elif block.syscall == SYSCALL.read:
-    # TODO buffer to str is wrong
     execCode = "readRet = read({}, {}, {});".format(
       block.args[0].getRef(), block.args[1].getValueStr(), block.args[2].getValueStr()
     )
@@ -141,5 +140,31 @@ def BlockToCode(i, block):
       "syscallRet = fsync({});".format(block.args[0].getRef()),
       "log_trace(\"ftruncate returns: %d\", syscallRet);",
       'syscallCnt++; if(lseekRet==-1) badSyscallCnt++;'
+    ]
+    return SEP.join(code)
+  elif block.syscall == SYSCALL.pread:
+    execCode = "syscallRet = pread({}, {}, {}, {});".format(
+      block.args[0].getRef(), block.args[1].getValueStr(),
+      block.args[2].getValueStr(), block.args[3].getValueStr()
+    )
+    logCode = "log_trace(\"numOfBytes Read (pread) %d\", syscallRet);"
+    syscallCntCode = "syscallCnt++; if(syscallRet==-1) badSyscallCnt++;"
+    code = [
+      execCode,
+      logCode,
+      syscallCntCode
+    ]
+    return SEP.join(code)
+  elif block.syscall == SYSCALL.pwrite:
+    execCode = "syscallRet = pwrite({}, {}, {}, {});".format(
+      block.args[0].getRef(), block.args[1].getValueStr(),
+      block.args[2].getValueStr(), block.args[3].getValueStr()
+    )
+    logCode = "log_trace(\"numOfBytes Written %d\", syscallRet);"
+    syscallCntCode = "syscallCnt++; if(syscallRet==-1) badSyscallCnt++;"
+    code = [
+      execCode,
+      logCode,
+      syscallCntCode
     ]
     return SEP.join(code)
