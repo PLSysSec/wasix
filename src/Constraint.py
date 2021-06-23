@@ -46,12 +46,17 @@ class Constraint:
         Block(SYSCALL.posix_fallocate, fd, Integer(0), Integer(4096)),
         Block(SYSCALL.posix_fallocate, fd, Integer(0), RandomInteger(0, 4096)),
 
-        Block(SYSCALL.lseek, fd, Integer(0), "SEEK_SET"),
-        Block(SYSCALL.lseek, fd, RandomInteger(0, 512), "SEEK_SET"),
-        Block(SYSCALL.lseek, fd, Integer(0), "SEEK_CUR"),
-        Block(SYSCALL.lseek, fd, RandomInteger(0, 512), "SEEK_CUR"),
-        Block(SYSCALL.lseek, fd, Integer(0), "SEEK_END"),
-        Block(SYSCALL.lseek, fd, RandomInteger(0, 512), "SEEK_END"),
+        Block(SYSCALL.lseek, fd, Integer(0), StringGroup("position", [
+          "SEEK_SET", "SEEK_CUR", "SEEK_END"
+        ])),
+        Block(SYSCALL.lseek, fd, RandomInteger(0, 512), StringGroup("position", [
+          "SEEK_SET", "SEEK_CUR", "SEEK_END"
+        ])),
+
+        Block(SYSCALL.posix_fadvise, fd, RandomInteger(0,512), RandomInteger(0, 512),
+          StringGroup("advice", [
+            "POSIX_FADV_NORMAL", "POSIX_FADV_SEQUENTIAL", "POSIX_FADV_RANDOM", "POSIX_FADV_NOREUSE",
+            "POSIX_FADV_WILLNEED", "POSIX_FADV_DONTNEED"])),
 
         Block(SYSCALL.ftruncate, fd, Integer(0)),
         Block(SYSCALL.ftruncate, fd, RandomInteger(0, 8192)),

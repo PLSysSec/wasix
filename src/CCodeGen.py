@@ -104,7 +104,7 @@ def BlockToCode(i, block):
   elif block.syscall == SYSCALL.lseek:
     code = [
       "lseekRet = lseek({}, {}, {});".format(
-        block.args[0].getRef(), block.args[1].getValueStr(), block.args[2]
+        block.args[0].getRef(), block.args[1].getValueStr(), block.args[2].getValueStr()
       ),
       "log_trace(\"lseek returns: %d\", lseekRet);",
       'syscallCnt++; if(lseekRet==-1) badSyscallCnt++;'
@@ -114,6 +114,16 @@ def BlockToCode(i, block):
     code = [
       "syscallRet = ftruncate({}, {});".format(
         block.args[0].getRef(), block.args[1].getValueStr()
+      ),
+      "log_trace(\"ftruncate returns: %d\", syscallRet);",
+      'syscallCnt++; if(lseekRet==-1) badSyscallCnt++;'
+    ]
+    return SEP.join(code)
+  elif block.syscall == SYSCALL.posix_fadvise:
+    code = [
+      "syscallRet = posix_fadvise({}, {}, {}, {});".format(
+        block.args[0].getRef(), block.args[1].getValueStr(),
+        block.args[2].getValueStr(), block.args[3].getValueStr()
       ),
       "log_trace(\"ftruncate returns: %d\", syscallRet);",
       'syscallCnt++; if(lseekRet==-1) badSyscallCnt++;'

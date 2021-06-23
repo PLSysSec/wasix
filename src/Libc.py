@@ -13,3 +13,4 @@ class SYSCALL:
   clock_gettime   = "clock_gettime"
   lseek           = "lseek"
   ftruncate       = "ftruncate"
+  posix_fadvise  = "posix_fadvise"
