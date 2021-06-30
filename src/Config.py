@@ -1,3 +1,6 @@
+import shutil
+from pathlib import Path
+
 def getConfig():
   config = {
     "lucet": True,
@@ -57,3 +60,28 @@ def getConfig():
     "env": ["ENV_VAR_1", "ENV_VAR_2"]
   }
   return config
+
+def prep_env(working_dir):
+  test_file_dir = Path("{}/test_files".format(Path(__file__).parent))
+  working_test_file_dir = Path("{}/test_files".format(working_dir))
+  working_test_file_dir.mkdir(parents=True, exist_ok=True)
+  for tfile in test_file_dir.iterdir():
+    if tfile.suffix == ".txt":
+      shutil.copy2(str(tfile), working_test_file_dir)
+
+  print("Prepared {}".format(str(working_dir)))
+
+def collect_info(working_dir):
+  info = ""
+  tf_dir = Path("{}/test_files".format(working_dir))
+  for file in tf_dir.iterdir():
+    if file.is_file():
+      stat = file.stat()
+      info += "{}:\n".format(file.name)
+      info += "st_size: {}\n".format(stat.st_size)
+    # if config["single_os"]:
+    #     f.write("st_mode: {}\n".format(stat.st_mode))
+    #     f.write("st_nlink: {}\n".format(stat.st_nlink))
+    #     f.write("st_uid: {}\n".format(stat.st_uid))
+    #     f.write("st_gid: {}\n".format(stat.st_gid))
+  return info
