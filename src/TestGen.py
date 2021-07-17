@@ -45,6 +45,9 @@ def TestGen(num, size, test_dir, config):
     #   else:
     #     print("Lucetc: Compiled to {}".format(son))
 
+def generate_prelude(config):
+  pass
+
 def generate_blocks(config, test_size):
   pool = InitBlockPool(config)
   test_blocks = []

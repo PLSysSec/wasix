@@ -50,12 +50,19 @@ def getConfig():
                                       # "O_RDWR | O_TRUNC",
                                       # "O_RDWR | O_PATH",
                                      ]},
-      {"path": "medium.txt", "flags": ["O_RDWR"]},
-      {"path": "large.txt", "flags": ["O_RDWR"]},
-      {"path": "not_exist.txt", "flags": ["O_RDWR",
+      {"path": "test_files/medium.txt", "flags": ["O_RDWR"]},
+      {"path": "test_files/large.txt", "flags": ["O_RDWR"]},
+      {"path": "test_files/not_exist.txt", "flags": ["O_RDWR",
                                           "O_RDWR | O_CREAT",
                                           # "O_RDWR | O_CREAT | O_EXCL",
                                          ]},
+    ],
+    "dirs": [
+      ".",
+      "./test_files",
+      "empty_dir",
+      "normal_dir",
+      "link_dir"
     ],
     "env": ["ENV_VAR_1", "ENV_VAR_2"]
   }
@@ -68,6 +75,21 @@ def prep_env(working_dir):
   for tfile in test_file_dir.iterdir():
     if tfile.suffix == ".txt":
       shutil.copy2(str(tfile), working_test_file_dir)
+  
+  # empty_dir = Path("{}/empty_dir".format(working_dir))
+  # empty_dir.mkdir()
+
+  # normal_dir = Path("{}/normal_dir".format(working_dir))
+  # normal_dir.mkdir()
+  # for tfile in test_file_dir.iterdir():
+  #   if tfile.suffix == ".txt":
+  #     shutil.copy2(str(tfile), normal_dir)
+
+  # link_dir = Path("{}/normal_dir".format(working_dir))
+  # link_dir.mkdir()
+  # for tfile in test_file_dir.iterdir():
+  #   if tfile.suffix == ".txt":
+  #     shutil.copy2(str(tfile), link_dir)
 
   print("Prepared {}".format(str(working_dir)))
 

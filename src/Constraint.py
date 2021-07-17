@@ -19,7 +19,7 @@ class Constraint:
       file = config["files"][i]
       path = file["path"]
       for flag in file["flags"]:
-        fn = "test_files/{}".format(path)
+        fn = "{}".format(path)
         init.append(
           Block(SYSCALL.open, fn, flag, ret = Variable("int", name = "fd"))
         )
