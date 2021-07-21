@@ -1,6 +1,7 @@
 from Block import Block
 from Libc import SYSCALL 
 from Argument import *
+from AbstractFS import walk_through
 
 class Constraint:
   def getInitBlocks(config):
@@ -15,14 +16,11 @@ class Constraint:
         Block(SYSCALL.getenv, env_var)
       )
 
-    for i in range(len(config["files"])):
-      file = config["files"][i]
-      path = file["path"]
-      for flag in file["flags"]:
-        fn = "test_files/{}".format(path)
-        init.append(
-          Block(SYSCALL.open, fn, flag, ret = Variable("int", name = "fd"))
-        )
+    td = config["test_directory"].create("test_files")
+    for file in walk_through(td):
+      init.append(
+        Block(SYSCALL.open, file, "O_RDWR", ret = Variable("int", name = "fd"))
+      )
     return init
 
   def getCanFollow(prev : Block):
