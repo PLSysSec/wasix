@@ -17,15 +17,12 @@ int main(int argc, char * argv[]) {{
 		global_wbuf[i] = 'x';
 	}}
 
-	int readRet = 0;
-	int writeRet = 0;
-	int lseekRet = 0;
-  int syscallCnt = 0;
-  int badSyscallCnt = 0;
-  int syscallRet = 0;
+	int syscallCnt = 0;
+	int badSyscallCnt = 0;
+	int syscallRet = 0;
 	{}  
-  printf("@Total syscall cnt:%d\\n", syscallCnt);
-  printf("@Bad syscall cnt:%d\\n", badSyscallCnt);
+	printf("@Total syscall cnt:%d\\n", syscallCnt);
+	printf("@Bad syscall cnt:%d\\n", badSyscallCnt);
 }}
 """
 

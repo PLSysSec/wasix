@@ -58,7 +58,7 @@ def collect_after_run_info(dir, runtime, os, test_name, config, process, start_C
   collect_proc_info(config, process, f)
   collect_test_files(config, dir, f)
   end_CPU_time = time.time()
-  f.write("$Time(CPU seconds):%f\r\n" % (end_CPU_time - start_CPU_time))
+  # f.write("$Time(CPU seconds):%f\r\n" % (end_CPU_time - start_CPU_time))
   f.close()
 
   print("Generated {}".format(trace.name))
