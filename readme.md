@@ -137,7 +137,7 @@ git clone https://github.com/bytecodealliance/wasm-micro-runtime.git
 cd product-mini/platforms/<FIND YOU OS>/
 mkdir build
 cd build
-cmake .. -DWAMR_BUILD_AOT=1 -DWAMR_BUILD_LIBC_WASI=0
+cmake .. -DWAMR_BUILD_AOT=1 -DWAMR_BUILD_LIBC_WASI=1
 make
 ```
 You also need to export your build directory(where the `iwasm` binary locates) to `PATH`.
