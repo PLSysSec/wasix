@@ -1,4 +1,5 @@
 from pathlib import Path
+import Config
 import subprocess
 import shutil
 import time
@@ -11,7 +12,7 @@ def Execute(test_dir, out_dir, runtimes, os, config):
 
 def run_one_test(dir, test_name, test_path, runtime, os, config):
   start_CPU_time = time.time()
-  working_dir = setup_environment(dir, test_name, config)
+  test_dir, working_dir = setup_environment(dir, test_name, config)
   print("Running {} with {}".format(test_name, runtime["name"]))
 
   accessible_dir = "."
@@ -20,24 +21,19 @@ def run_one_test(dir, test_name, test_path, runtime, os, config):
   for cmd in runtime["getCmds"](accessible_dir, test_path):
     p = subprocess.run(cmd, cwd=working_dir,
       universal_newlines=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-  collect_after_run_info(working_dir, runtime, os, test_name, config, p, start_CPU_time)
+  collect_after_run_info(test_dir, working_dir, runtime, os, test_name, config, p, start_CPU_time)
   
- 
 
 def setup_environment(dir, name, config):
-  working_dir = Path("{}/{}".format(dir, name))
+  test_dir = Path("{}/{}".format(dir, name))
+  test_dir.mkdir(parents=True, exist_ok=True)
+
+  working_dir = Path("{}/{}".format(test_dir, "tmp"))
   working_dir.mkdir(parents=True, exist_ok=True)
+  clean_dir(working_dir)
 
-  test_file_dir = Path("{}/test_files".format(Path(__file__).parent))
-  working_test_file_dir = Path("{}/test_files".format(working_dir))
-  working_test_file_dir.mkdir(parents=True, exist_ok=True)
-  clean_dir(working_test_file_dir)
-  for tfile in test_file_dir.iterdir():
-    if tfile.suffix == ".txt":
-      shutil.copy2(str(tfile), working_test_file_dir)
-
-  print("Prepared {}".format(str(working_dir)))
-  return str(working_dir)
+  Config.prep_env(working_dir)
+  return (str(test_dir), str(working_dir))
 
 def clean_dir(d):
   for p in d.iterdir():
@@ -47,17 +43,19 @@ def clean_dir(d):
       clean_dir(p)
       p.rmdir()
 
-def collect_after_run_info(dir, runtime, os, test_name, config, process, start_CPU_time):
-  old_trace = Path("{}/{}.trace".format(dir, test_name))
+def collect_after_run_info(test_dir, working_dir, runtime, os, test_name, config, process, start_CPU_time):
+  old_trace = Path("{}/{}.trace".format(working_dir, test_name))
   if not old_trace.exists(): old_trace.touch()
-  new_trace = Path("{}/{}_{}_{}.trace".format(dir, test_name, runtime["name"], os))
+  new_trace = Path("{}/{}_{}_{}.trace".format(test_dir, test_name, runtime["name"], os))
   trace = old_trace.rename(new_trace)
 
   f = open(trace, "a")
   f.write(sep_line("After Run Info"))
   collect_proc_info(config, process, f)
-  collect_test_files(config, dir, f)
-  end_CPU_time = time.time()
+  f.write(sep_line("Custom Info"))
+  custom_info = Config.collect_info(working_dir)
+  f.write(custom_info)
+  # end_CPU_time = time.time()
   # f.write("$Time(CPU seconds):%f\r\n" % (end_CPU_time - start_CPU_time))
   f.close()
 
@@ -72,20 +70,6 @@ def collect_proc_info(config, p, f):
   if config["stderr"]:
     f.write(sep_line("std err"))
     f.write(p.stderr)
-
-def collect_test_files(config, dir, f):
-  f.write(sep_line("test files"))
-  tf_dir = Path("{}/test_files".format(dir))
-  for file in tf_dir.iterdir():
-    if file.is_file():
-      stat = file.stat()
-      f.write("{}:\n".format(file.name))
-      f.write("st_size: {}\n".format(stat.st_size))
-      if config["single_os"]:
-        f.write("st_mode: {}\n".format(stat.st_mode))
-        f.write("st_nlink: {}\n".format(stat.st_nlink))
-        f.write("st_uid: {}\n".format(stat.st_uid))
-        f.write("st_gid: {}\n".format(stat.st_gid))
 
 def get_all_tests(test_dir):
   names = []

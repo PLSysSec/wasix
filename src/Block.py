@@ -4,7 +4,7 @@ import random
 class Block:
   def __init__(self, syscall, *args, ret = None):
     self.syscall = syscall 
-    self.args = args
+    self.args = list(args)
     self.ret = ret
     self.fd = args[0] if len(args) > 0 else None
 

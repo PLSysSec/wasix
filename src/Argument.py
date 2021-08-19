@@ -1,4 +1,5 @@
-import random
+from Random import Random
+import string
 
 class Variable:
   __count = 0
@@ -22,6 +23,28 @@ class Variable:
   def clear_count():
     Variable.__count = 0
 
+class ValueGroup:
+  def __init__(self, lst, name = "noname"):
+    self.name = name
+    self.lst = lst
+  def __str__(self):
+    return "string_from_{}".format(self.name)
+  def getValueStr(self):
+    return Random.chooseItem(self.lst)
+
+class RandomString:
+  def __init__(self, length):
+    self.length = length
+  def __str__(self):
+    return "rand_str_{}".format(self.length)
+  def getValueStr(self):
+    letters = list(string.ascii_letters)
+    s = ""
+    for i in range(self.length):
+      s += Random.chooseItem(letters)
+    return '"{}"'.format(s)
+
+
 class Integer:
   def __init__(self, val):
     self.val = val
@@ -41,7 +64,7 @@ class RandomInteger:
     return "rand_int_{}_{}".format(str(self.min), str(self.max))
 
   def getValueStr(self):
-    return str(random.randint(self.min, self.max))
+    return str(Random.getInteger(self.min, self.max))
 
 class Buffer:
   GLOBAL_RBUF = None
