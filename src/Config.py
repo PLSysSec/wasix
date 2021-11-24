@@ -12,7 +12,7 @@ def getConfig():
     File("large.txt"),
   ])
   config = {
-    "lucet": True,
+    "lucet": False,
     "stdout": True,
     "stderr": False,
     "single_os": False,
@@ -28,24 +28,24 @@ def getConfig():
         "getCmds":
           lambda dir, wasm: [["wasmer", "--dir={}".format(dir), wasm]]
       },
-      {
-        "name": "lucet",
-        "getCmds":
-          lambda dir, wasm: [
-            ["lucetc-wasi", "-o", wasm.replace(".wasm", ".so"), wasm],
-            ["lucet-wasi", wasm.replace(".wasm", ".so"), "--dir", "{}:{}".format(dir, dir)]
-          ]
-      },
+      # {
+      #   "name": "lucet",
+      #   "getCmds":
+      #     lambda dir, wasm: [
+      #       ["lucetc-wasi", "-o", wasm.replace(".wasm", ".so"), wasm],
+      #       ["lucet-wasi", wasm.replace(".wasm", ".so"), "--dir", "{}:{}".format(dir, dir)]
+      #     ]
+      # },
       # {
       #   "name": "wavm",
       #   "getCmds": 
       #     lambda dir, wasm: [["wavm", "run", "--mount-root", dir, wasm]]
       # },
-      # {
-      #   "name": "iwasm",
-      #   "getCmds":
-      #     lambda dir, wasm: [["iwasm", "--dir={}".format(dir), wasm]]
-      # },
+      {
+        "name": "iwasm",
+        "getCmds":
+          lambda dir, wasm: [["iwasm", "--dir={}".format(dir), wasm]]
+      },
       # {
       #   "name": "wasm3",
       #   "getCmds": 
