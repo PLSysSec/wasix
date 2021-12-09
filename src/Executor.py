@@ -21,6 +21,11 @@ def run_one_test(dir, test_name, test_path, runtime, os, config):
   for cmd in runtime["getCmds"](accessible_dir, test_path):
     p = subprocess.run(cmd, cwd=working_dir,
       universal_newlines=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    print("test_path is: " + test_path)
+    print("cwd is : " + working_dir)
+    print("cmd is : " + " ".join(cmd))
+    print(p.stdout)
+    print(p.stderr)
   collect_after_run_info(test_dir, working_dir, runtime, os, test_name, config, p, start_CPU_time)
   
 
@@ -75,7 +80,7 @@ def get_all_tests(test_dir):
   names = []
   paths = []
   for child in Path(test_dir).iterdir():
-    if(child.suffix == ".wasm"):
+    if(child.suffix == ".wasm" and "veri" not in str(child)):
       names.append(child.stem)
       paths.append(str(child))
   return zip(names, paths)

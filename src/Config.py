@@ -5,6 +5,41 @@ from AbstractFS import File
 from AbstractFS import Dir
 from AbstractFS import TestDirectory
 
+def getCmdsForVeriWasm(dir, wasm):
+  veriwasm_base = "/home/zijie/verified-wasm-runtime/"
+  CC = veriwasm_base + "rlbox_wasm2c_sandbox/build/_deps/wasiclang-src/build/install/opt/wasi-sdk/bin/clang"
+  CFLAGS = ["--sysroot", "{}rlbox_wasm2c_sandbox/build/_deps/wasiclang-src/src/wasi-libc/sysroot/".format(veriwasm_base)]
+  LDFLAGS = ["-Wl,--export-all", "-Wl,--growable-table"]
+  RLBOX_ROOT = veriwasm_base + "rlbox_wasm2c_sandbox/"
+  WASM2C_BIN_ROOT = RLBOX_ROOT + "build/_deps/mod_wasm2c-src/bin/"
+  WASM2C_SRC_ROOT = RLBOX_ROOT + "build/_deps/mod_wasm2c-src/wasm2c/"
+  WASM2C = WASM2C_BIN_ROOT + "wasm2c"
+  RUNNER = WASM2C_BIN_ROOT + "wasm2c-runner"
+
+  GCC_I = [
+    "-I{}".format(WASM2C_SRC_ROOT),
+    WASM2C_SRC_ROOT + "wasm-rt-impl.c",
+    WASM2C_SRC_ROOT + "wasm-rt-os-unix.c",
+    WASM2C_SRC_ROOT + "wasm-rt-os-win.c",
+    WASM2C_SRC_ROOT + "wasm-rt-wasi.c",
+    veriwasm_base + "target/release/libveriwasi.so",
+    "-I" + veriwasm_base + "bindings"
+  ]
+
+  f_c = wasm.replace(".wasm", ".c")
+  f_veri_wasm = wasm.replace(".wasm", ".veri.wasm")
+  f_veri_wasm_c = wasm.replace(".wasm", ".veri.wasm.c")
+  f_veri_wasm_c_run = wasm.replace(".wasm", ".veri.wasm.c.run")
+  cmds = [
+    [CC]+CFLAGS+[f_c, "-o", f_veri_wasm, "-I/home/zijie/wasix/src"]+LDFLAGS,
+    [WASM2C, "-o", f_veri_wasm_c, f_veri_wasm],
+    ["gcc", "-shared", "-fPIC", "-O3", "-o", f_veri_wasm_c_run, f_veri_wasm_c] + GCC_I,
+    [RUNNER, f_veri_wasm_c_run]
+  ]
+  # for cmd in cmds:
+  #   print(" ".join(cmd))
+  return cmds
+
 def getConfig():
   td = TestDirectory([
     File("small.txt"),
@@ -23,10 +58,14 @@ def getConfig():
         "getCmds":
           lambda dir, wasm: [["wasmtime", "--dir={}".format(dir), wasm]]
       },
+      # {
+      #   "name": "wasmer",
+      #   "getCmds":
+      #     lambda dir, wasm: [["wasmer", "--dir={}".format(dir), wasm]]
+      # },
       {
-        "name": "wasmer",
-        "getCmds":
-          lambda dir, wasm: [["wasmer", "--dir={}".format(dir), wasm]]
+        "name": "veriwasm",
+        "getCmds": getCmdsForVeriWasm
       },
       # {
       #   "name": "lucet",
@@ -41,11 +80,11 @@ def getConfig():
       #   "getCmds": 
       #     lambda dir, wasm: [["wavm", "run", "--mount-root", dir, wasm]]
       # },
-      {
-        "name": "iwasm",
-        "getCmds":
-          lambda dir, wasm: [["iwasm", "--dir={}".format(dir), wasm]]
-      },
+      # {
+      #   "name": "iwasm",
+      #   "getCmds":
+      #     lambda dir, wasm: [["iwasm", "--dir={}".format(dir), wasm]]
+      # },
       # {
       #   "name": "wasm3",
       #   "getCmds": 
