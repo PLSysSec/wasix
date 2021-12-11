@@ -34,7 +34,7 @@ def getCmdsForVeriWasm(dir, wasm):
     [CC]+CFLAGS+[f_c, "-o", f_veri_wasm, "-I/home/zijie/wasix/src"]+LDFLAGS,
     [WASM2C, "-o", f_veri_wasm_c, f_veri_wasm],
     ["gcc", "-shared", "-fPIC", "-O3", "-o", f_veri_wasm_c_run, f_veri_wasm_c] + GCC_I,
-    [RUNNER, f_veri_wasm_c_run]
+    [RUNNER,  f_veri_wasm_c_run, "--homedir="+dir]
   ]
   # for cmd in cmds:
   #   print(" ".join(cmd))
@@ -150,6 +150,7 @@ def collect_info(working_dir):
       stat = file.stat()
       info += "{}:\n".format(file.name)
       info += "st_size: {}\n".format(stat.st_size)
+      info += "st_mode: {}\n".format(stat.st_mode)
     # if config["single_os"]:
     #     f.write("st_mode: {}\n".format(stat.st_mode))
     #     f.write("st_nlink: {}\n".format(stat.st_nlink))
