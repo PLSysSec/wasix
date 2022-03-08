@@ -14,7 +14,7 @@ def TestGen(num, size, test_dir, config):
   for i in range(num):
     blocks = generate_blocks(config, size)
 
-    n = secrets.token_hex(8)
+    n = "test_" + secrets.token_hex(8)
     fn ="{}/{}.c".format(test_dir, n)
     f = open(fn, "w")
     f.write(CCodeGen(blocks, n))
