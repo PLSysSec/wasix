@@ -142,6 +142,14 @@ def prep_env(working_dir):
 
   print("Prepared {}".format(str(working_dir)))
 
+def process_output(process):
+  print(f"searchme: {type(process.stdout)}")
+  new_stdout = ""
+  for line in process.stdout.split("\n"):
+    if not line.startswith("fdmap = "):
+      new_stdout += line
+  process.stdout = new_stdout
+
 def collect_info(working_dir):
   info = ""
   tf_dir = Path("{}/test_files".format(working_dir))
