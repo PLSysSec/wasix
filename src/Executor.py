@@ -94,7 +94,7 @@ def get_all_tests(test_dir):
   names = []
   paths = []
   for child in Path(test_dir).iterdir():
-    if(child.suffix == ".wasm" and "veri" not in str(child)):
+    if(child.suffix == ".wasm" and "veri" not in str(child.name)):
       names.append(child.stem)
       paths.append(str(child))
   return zip(names, paths)

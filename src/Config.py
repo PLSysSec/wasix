@@ -8,15 +8,16 @@ from AbstractFS import TestDirectory
 def getWaveBase():
   wave_dir_name = "verified-wasm-runtime"
   wasixBase = Path(__file__).parent.parent.resolve()
-  outter = wasixBase.parent.stem
-  if(outter == wave_dir_name): return str(outter) + "/"
+  outter = wasixBase.parent
+  if(outter.stem == wave_dir_name): return str(outter) + "/"
   sibling = wasixBase.parent.joinpath(wave_dir_name)
   if(sibling.is_dir()): return str(sibling) + "/"
   print(f"Cannot find {wave_dir_name}, please edit {__file__}")
   quit(1)
 
+WAVE_BASE = getWaveBase()
+
 def getCmdsForVeriWasm(dir, wasm):
-  WAVE_BASE = getWaveBase()
   CC = WAVE_BASE + "rlbox_wasm2c_sandbox/build/_deps/wasiclang-src/build/install/opt/wasi-sdk/bin/clang"
   CFLAGS = ["--sysroot", "{}rlbox_wasm2c_sandbox/build/_deps/wasiclang-src/src/wasi-libc/sysroot/".format(WAVE_BASE)]
   LDFLAGS = ["-Wl,--export-all", "-Wl,--growable-table"]
