@@ -5,14 +5,22 @@ from AbstractFS import File
 from AbstractFS import Dir
 from AbstractFS import TestDirectory
 
-VERIWASM_BASE = "/home/zijie/verified-wasm-runtime/"
-
+def getWaveBase():
+  wave_dir_name = "verified-wasm-runtime"
+  wasixBase = Path(__file__).parent.parent.resolve()
+  outter = wasixBase.parent.stem
+  if(outter == wave_dir_name): return str(outter) + "/"
+  sibling = wasixBase.parent.joinpath(wave_dir_name)
+  if(sibling.is_dir()): return str(sibling) + "/"
+  print(f"Cannot find {wave_dir_name}, please edit {__file__}")
+  quit(1)
 
 def getCmdsForVeriWasm(dir, wasm):
-  CC = VERIWASM_BASE + "rlbox_wasm2c_sandbox/build/_deps/wasiclang-src/build/install/opt/wasi-sdk/bin/clang"
-  CFLAGS = ["--sysroot", "{}rlbox_wasm2c_sandbox/build/_deps/wasiclang-src/src/wasi-libc/sysroot/".format(VERIWASM_BASE)]
+  WAVE_BASE = getWaveBase()
+  CC = WAVE_BASE + "rlbox_wasm2c_sandbox/build/_deps/wasiclang-src/build/install/opt/wasi-sdk/bin/clang"
+  CFLAGS = ["--sysroot", "{}rlbox_wasm2c_sandbox/build/_deps/wasiclang-src/src/wasi-libc/sysroot/".format(WAVE_BASE)]
   LDFLAGS = ["-Wl,--export-all", "-Wl,--growable-table"]
-  RLBOX_ROOT = VERIWASM_BASE + "rlbox_wasm2c_sandbox/"
+  RLBOX_ROOT = WAVE_BASE + "rlbox_wasm2c_sandbox/"
   WASM2C_BIN_ROOT = RLBOX_ROOT + "build/_deps/mod_wasm2c-src/bin/"
   WASM2C_SRC_ROOT = RLBOX_ROOT + "build/_deps/mod_wasm2c-src/wasm2c/"
   WASM2C = WASM2C_BIN_ROOT + "wasm2c"
@@ -24,8 +32,8 @@ def getCmdsForVeriWasm(dir, wasm):
     WASM2C_SRC_ROOT + "wasm-rt-os-unix.c",
     WASM2C_SRC_ROOT + "wasm-rt-os-win.c",
     WASM2C_SRC_ROOT + "wasm-rt-wasi.c",
-    VERIWASM_BASE + "target/release/libwave.so",
-    "-I" + VERIWASM_BASE + "bindings"
+    WAVE_BASE + "target/release/libwave.so",
+    "-I" + WAVE_BASE + "bindings"
   ]
 
   f_c = wasm.replace(".wasm", ".c")
