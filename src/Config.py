@@ -22,7 +22,7 @@ def getCmdsForVeriWasm(dir, wasm):
     WASM2C_SRC_ROOT + "wasm-rt-os-unix.c",
     WASM2C_SRC_ROOT + "wasm-rt-os-win.c",
     WASM2C_SRC_ROOT + "wasm-rt-wasi.c",
-    veriwasm_base + "target/release/libveriwasi.so",
+    veriwasm_base + "target/release/libwave.so",
     "-I" + veriwasm_base + "bindings"
   ]
 
