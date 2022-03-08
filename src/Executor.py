@@ -70,7 +70,6 @@ def collect_after_run_info(test_dir, working_dir, runtime, os, test_name, config
 
   f = open(trace, "a")
   f.write(sep_line("After Run Info"))
-  Config.process_output(process)
   collect_proc_info(config, process, f)
   f.write(sep_line("Custom Info"))
   custom_info = Config.collect_info(working_dir)

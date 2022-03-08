@@ -2,6 +2,7 @@ from difflib import HtmlDiff
 from pathlib import Path
 from datetime import date, datetime
 import filecmp
+import Config
 
 from Template import report_template
 
@@ -51,7 +52,8 @@ def CheckOneTest(dir, time):
   for trace in dir.iterdir():
     if trace.suffix == ".trace":
       names.append(trace.stem.replace("{}_".format(test_name), ""))
-      traces.append(trace)
+      lines = Config.filter_output_before_checking(trace.open().readlines())
+      traces.append((trace, lines))
   
   names.sort()
   traces.sort()
@@ -70,15 +72,15 @@ def CheckOneTest(dir, time):
     ]
     for j in range(len(traces)):
       if j > i:
-        t1 = traces[i]
-        t2 = traces[j]
-        if not filecmp.cmp(t1, t2, shallow=False):
+        t1, t1_lines = traces[i]
+        t2, t2_lines = traces[j]
+        if not check_lines(t1_lines, t2_lines):
           cmp_name = "{}_vs_{}".format(names[i], names[j])
           html_name = "{}_{}.html".format(cmp_name, int(datetime.timestamp(time)))
           full_path = "{}/{}".format(dir, html_name)
           rel_path = "{}/{}".format(test_name, html_name)
           f = open(full_path, "w")
-          html = HtmlDiff().make_file(t1.open().readlines(), t2.open().readlines())
+          html = HtmlDiff().make_file(t1_lines, t2_lines)
           f.write(html)
           f.close()
           report["htmls"].append({
@@ -94,3 +96,9 @@ def CheckOneTest(dir, time):
   table.append("</table>")
   report["table"] = "\n    ".join(table)
   return report
+
+def check_lines(l1, l2):
+  if len(l1) != len(l2): return False
+  for i in range(len(l1)):
+    if l1[i] != l2[i]: return False
+  return True

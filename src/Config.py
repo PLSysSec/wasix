@@ -5,12 +5,14 @@ from AbstractFS import File
 from AbstractFS import Dir
 from AbstractFS import TestDirectory
 
+VERIWASM_BASE = "/home/zijie/verified-wasm-runtime/"
+
+
 def getCmdsForVeriWasm(dir, wasm):
-  veriwasm_base = "/home/zijie/verified-wasm-runtime/"
-  CC = veriwasm_base + "rlbox_wasm2c_sandbox/build/_deps/wasiclang-src/build/install/opt/wasi-sdk/bin/clang"
-  CFLAGS = ["--sysroot", "{}rlbox_wasm2c_sandbox/build/_deps/wasiclang-src/src/wasi-libc/sysroot/".format(veriwasm_base)]
+  CC = VERIWASM_BASE + "rlbox_wasm2c_sandbox/build/_deps/wasiclang-src/build/install/opt/wasi-sdk/bin/clang"
+  CFLAGS = ["--sysroot", "{}rlbox_wasm2c_sandbox/build/_deps/wasiclang-src/src/wasi-libc/sysroot/".format(VERIWASM_BASE)]
   LDFLAGS = ["-Wl,--export-all", "-Wl,--growable-table"]
-  RLBOX_ROOT = veriwasm_base + "rlbox_wasm2c_sandbox/"
+  RLBOX_ROOT = VERIWASM_BASE + "rlbox_wasm2c_sandbox/"
   WASM2C_BIN_ROOT = RLBOX_ROOT + "build/_deps/mod_wasm2c-src/bin/"
   WASM2C_SRC_ROOT = RLBOX_ROOT + "build/_deps/mod_wasm2c-src/wasm2c/"
   WASM2C = WASM2C_BIN_ROOT + "wasm2c"
@@ -22,8 +24,8 @@ def getCmdsForVeriWasm(dir, wasm):
     WASM2C_SRC_ROOT + "wasm-rt-os-unix.c",
     WASM2C_SRC_ROOT + "wasm-rt-os-win.c",
     WASM2C_SRC_ROOT + "wasm-rt-wasi.c",
-    veriwasm_base + "target/release/libwave.so",
-    "-I" + veriwasm_base + "bindings"
+    VERIWASM_BASE + "target/release/libwave.so",
+    "-I" + VERIWASM_BASE + "bindings"
   ]
 
   f_c = wasm.replace(".wasm", ".c")
@@ -142,13 +144,14 @@ def prep_env(working_dir):
 
   print("Prepared {}".format(str(working_dir)))
 
-def process_output(process):
-  print(f"searchme: {type(process.stdout)}")
-  new_stdout = ""
-  for line in process.stdout.split("\n"):
-    if not line.startswith("fdmap = "):
-      new_stdout += line
-  process.stdout = new_stdout
+def filter_output_before_checking(lines):
+  def remove_black_list(line):
+    black_list = ["fdmap ="]
+    for word in black_list:
+      if word in line: return False
+    return True
+  filtered = list(filter(remove_black_list, lines))
+  return filtered
 
 def collect_info(working_dir):
   info = ""
