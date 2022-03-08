@@ -1,3 +1,54 @@
+# Usage
+
+## Use make
+Using `make` is the simplest way to interact with wasix.
+
+`make gen [NUM=X] [SIZE=Y]`: generates X tests, where each test has Y syscalls, in `test/`
+
+`make run [OS=OS_NAME]`: run all test in test/ and generate traces in `traces/`. Trace files have `OS_NAME` as part of their names.
+
+`make check`: checks trace files in traces/ and generates a HTML report there.
+
+`make all [NUM=X] [SIZE=Y] [OS=OS_NAME]`: equivalent to run all commands above
+
+If not specified, defaults are `X=10, Y=30, OS=not_specified`
+
+`run.sh` and `test.sh` each contains an example make commands.
+
+## Use wasix
+You can also use the `wasix` script directly to specify where you want to put tests and traces.
+```
+usage: wasix [-h] (--gen | --run | --check | --all) [--num NUM] [--size SIZE] [--test_dir TEST_DIR] [--trace_dir TRACE_DIR] [--os OS]
+
+A differential testing tool for WASI-compatible WASM runtimes
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --gen                 generate tests
+  --run                 run tests and generate trace files
+  --check               compare trace files
+  --all                 gen, run, and check; needs all other flags defined
+  --num NUM             number of tests
+  --size SIZE           size of each test
+  --test_dir TEST_DIR   where wasm tests are/should be located
+  --trace_dir TRACE_DIR
+                        where traces file are/should be located
+  --os OS               the name of current os
+```
+
+## Check bugs
+We manually wrote several tests that reproduce the bugs found by wasix.
+These tests are located under `bug/`
+To run them and see the result, use
+
+`make bug-comp`: compiles all the tests under bug/
+
+`make bug-run`: run all test and generate trace in bug-trace/
+
+`make bug-check`: check traces in bug-trace/ and generate a HTML report
+
+`make bug-all`: equivalent to run all commands above
+
 # About Wasix
 As a cross testing tool for WASM runtimes, focusing on WASI implementations, Wasix can automatically
 
@@ -13,6 +64,14 @@ We have manually written several C files that can reproduce bugs we found using 
   <summary><h2 style="display: inline-block">Table of Contents</h2></summary>
   <ul>
     <li>
+      <a href="#usage">Usage</a>
+      <ul>
+        <li><a href="#use-make">Use make</a></li>
+        <li><a href="#use-wasix">Use wasix</a></li>
+        <li><a href="#check-bugs">Check bugs</a></li>
+      </ul>
+    </li>
+    <li>
       <a href="#dependencies">Installing Dependencies</a>
       <ul>
         <li><a href="#install-wasi-sdk">WASI SDK</a></li>
@@ -22,14 +81,6 @@ We have manually written several C files that can reproduce bugs we found using 
         <li><a href="#wavm">WAVM</a></li>
         <li><a href="#wamr">WAMR</a></li>
         <li><a href="#wasm3">Wasm3 (Not recommended)</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#usage">Usage</a>
-      <ul>
-        <li><a href="#use-make">Use make</a></li>
-        <li><a href="#use-wasix">Use wasix</a></li>
-        <li><a href="#check-bugs">Check bugs</a></li>
       </ul>
     </li>
   </ul>
@@ -155,63 +206,3 @@ Run ```wasm3 <file>``` for executing.
 
 Note: seems at this time wasm3 doesn't support fstat.
 
-# Usage
-
-## Use make
-Using `make` is the simplest way to interact with wasix.
-
-```
-make gen [NUM=X] [SIZE=Y]
-# generates X tests, where each test has Y syscalls, in `test/`
-
-make run [OS=OS_NAME]
-# run all test in test/ and generate traces in traces/
-# Trace files have OS_NAME as part of their names.
-
-make check
-# checks trace files in traces/ and generates a HTML report there
-
-make all [NUM=X] [SIZE=Y] [OS=OS_NAME]
-# equivalent to run all commands above
-```
-
-If not specified, X=10, Y=30, OS=not_specified
-
-## Use wasix
-You can also use the `wasix` script directly to specify where you want to put tests and traces.
-```
-usage: wasix [-h] (--gen | --run | --check | --all) [--num NUM] [--size SIZE] [--test_dir TEST_DIR] [--trace_dir TRACE_DIR] [--os OS]
-
-A differential testing tool for WASI-compatible WASM runtimes
-
-optional arguments:
-  -h, --help            show this help message and exit
-  --gen                 generate tests
-  --run                 run tests and generate trace files
-  --check               compare trace files
-  --all                 gen, run, and check; needs all other flags defined
-  --num NUM             number of tests
-  --size SIZE           size of each test
-  --test_dir TEST_DIR   where wasm tests are/should be located
-  --trace_dir TRACE_DIR
-                        where traces file are/should be located
-  --os OS               the name of current os
-```
-
-## Check bugs
-We manually wrote several tests that reproduce the bugs found by wasix.
-These tests are located under `bug/`
-To run them and see the result, use
-```
-make bug-comp
-# compiles all the tests under bug/
-
-make bug-run
-# run all test and generate trace in bug-trace/
-
-make bug-check
-# check traces in bug-trace/ and generate a HTML report
-
-make bug-all
-# equivalent to run all commands above
-```

@@ -1,2 +1,1 @@
-make all NUM=1 2>&1 | tee out
-
+make all NUM=200 SIZE=50 2>&1 | tee out
