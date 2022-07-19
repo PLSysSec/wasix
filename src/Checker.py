@@ -26,11 +26,11 @@ def generateReport(reports, dir, time):
       lines.append('<dt class="wasix-clear">{}: clear</dt>'.format(report["name"]))
     else:
       lines.append('<dt class="wasix-error">{}</dt>'.format(report["name"]))
+      lines.append("<dd>{}</dd>".format(report["table"]))
 
-    for err in report["htmls"]:
+    # for err in report["htmls"]:
       # lines.append('  <dd><a href="{}">{}</a></dd>'
       #   .format(err["path"], err["name"]))
-      lines.append("<dd>{}</dd>".format(report["table"]))
   html = report_template.format(str(time), "\n  ".join(lines))
   fn = "{}/report_{}.html".format(dir, int(datetime.timestamp(time)))
   f = open(fn, "w")
@@ -68,7 +68,7 @@ def CheckOneTest(dir, time):
   for i in range(len(traces)):
     table += [
       "  <tr>",
-      "    <th>{}</th>".format(names[i]),
+      "    <th><a href='{}'>{}</a></th>".format(traces[i], names[i]),
     ]
     for j in range(len(traces)):
       if j > i:
