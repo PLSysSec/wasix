@@ -20,16 +20,12 @@ def run_one_test(dir, test_name, test_path, runtime, os, config):
   cmd = runtime["getCmds"](accessible_dir, test_path)
   p = None
   for cmd in runtime["getCmds"](accessible_dir, test_path):
-    p = subprocess.run(cmd, cwd=working_dir,
-      universal_newlines=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    print("test_path is: " + test_path)
-    print("cwd is : " + working_dir)
-    print("cmd is : " + " ".join(cmd))
-    print("stdout is:")
-    print(p.stdout)
-    print("stderr is:")
-    print(p.stderr)
-    print("stderr end")
+    try:
+      p = subprocess.run(cmd, cwd=working_dir,
+        universal_newlines=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+        timeout=3)
+    except subprocess.TimeoutExpired:
+      print(f"{test_name} timedout")
   collect_after_run_info(test_dir, working_dir, runtime, os, test_name, config, p, start_CPU_time)
   
 
@@ -82,13 +78,17 @@ def collect_after_run_info(test_dir, working_dir, runtime, os, test_name, config
 
 
 def collect_proc_info(config, p, f):
+  if p is None:
+    f.write("Test timedout")
+    return
+
   f.write("return code: {}\n".format(p.returncode))
-  if config["stdout"]:
-    f.write(sep_line("std out"))
-    f.write(p.stdout)
-  if config["stderr"]:
-    f.write(sep_line("std err"))
-    f.write(p.stderr)
+  # if config["stdout"]:
+  #   f.write(sep_line("std out"))
+  #   f.write(p.stdout)
+  # if config["stderr"]:
+  #   f.write(sep_line("std err"))
+  #   f.write(p.stderr)
 
 def get_all_tests(test_dir):
   names = []
