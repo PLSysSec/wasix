@@ -68,7 +68,7 @@ def CheckOneTest(dir, time):
   for i in range(len(traces)):
     table += [
       "  <tr>",
-      "    <th><a href='{}'>{}</a></th>".format(traces[i], names[i]),
+      "    <th><a href='{}'>{}</a></th>".format(traces[i][0], names[i]),
     ]
     for j in range(len(traces)):
       if j > i:
