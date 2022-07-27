@@ -67,17 +67,17 @@ def getConfig():
       {
         "name": "wasmtime",
         "getCmds":
-          lambda dir, wasm: [["wasmtime", "--dir={}".format(dir), wasm]]
+          lambda dir, wasm: [["wasmtime", "--dir={}".format(dir), "--enable-all", wasm]]
+      },
+      {
+        "name": "wasmer",
+        "getCmds":
+          lambda dir, wasm: [["wasmer", "--dir={}".format(dir), "--enable-all", wasm]]
       },
       # {
-      #   "name": "wasmer",
-      #   "getCmds":
-      #     lambda dir, wasm: [["wasmer", "--dir={}".format(dir), wasm]]
+      #   "name": "veriwasm",
+      #   "getCmds": getCmdsForVeriWasm
       # },
-      {
-        "name": "veriwasm",
-        "getCmds": getCmdsForVeriWasm
-      },
       # {
       #   "name": "lucet",
       #   "getCmds":
@@ -86,16 +86,21 @@ def getConfig():
       #       ["lucet-wasi", wasm.replace(".wasm", ".so"), "--dir", "{}:{}".format(dir, dir)]
       #     ]
       # },
-      # {
-      #   "name": "wavm",
-      #   "getCmds": 
-      #     lambda dir, wasm: [["wavm", "run", "--mount-root", dir, wasm]]
-      # },
-      # {
-      #   "name": "iwasm",
-      #   "getCmds":
-      #     lambda dir, wasm: [["iwasm", "--dir={}".format(dir), wasm]]
-      # },
+      {
+        "name": "wavm",
+        "getCmds": 
+          lambda dir, wasm: [["wavm", "run", "--function=_start", "--enable", "all", "--mount-root", dir, wasm]]
+      },
+      {
+        "name": "iwasm",
+        "getCmds":
+          lambda dir, wasm: [["iwasm", "--dir={}".format(dir), "--function", "_start", wasm]]
+      },
+      {
+        "name": "spec",
+        "getCmds":
+          lambda dir, wasm: [["/Users/zijie/Programs/wasix/selected_input/wasm", wasm]]
+      },
       # {
       #   "name": "wasm3",
       #   "getCmds": 
