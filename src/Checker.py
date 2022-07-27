@@ -40,7 +40,7 @@ def generateReport(reports, dir, time):
 
 def CheckOneTest(dir, time):
   print("  Checking {}".format(dir))
-  test_name = dir.stem
+  test_name = dir.name
   names  = []
   traces = []
   report = {
