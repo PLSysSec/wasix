@@ -10,4 +10,9 @@
         (i32.eqz (local.tee $i))
         (if (param i32) (result i32)
             (then)
-            (else (local.get $i) (br $loop))))))
+            (else (local.get $i) (br $loop)))))
+    (func (export "_start")
+      call 0
+      drop
+    )            
+)

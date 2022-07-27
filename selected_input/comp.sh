@@ -4,7 +4,7 @@ mkdir -p test
 rm -r test/*
 mkdir -p trace
 
-WASMTIME_CLI_TEST=0
+WASMTIME_CLI_TEST=1
 
 BUG_C=1
 BUG_WAT=1
