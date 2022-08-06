@@ -10,6 +10,8 @@ BUG_C=1
 BUG_WAT=1
 BUG_WASM=1
 
+SMITH=0
+
 if [ $WASMTIME_CLI_TEST -eq 1 ]; then
     echo "Compiling Wasmtime cli_test"
     for f in wasmtime_cli_test/*.wat; do 
@@ -38,6 +40,14 @@ if [ $BUG_WASM -eq 1 ]; then
     echo "Compiling Bug reports in wasm"
     for f in bug_wasm/*.wasm; do 
         echo $f
-        cp $f test/$(basename $f .wat).bugwasm.wasm
+        cp $f test/$(basename $f .wasm).bugwasm.wasm
+    done
+fi
+
+if [ $SMITH -eq 1 ]; then
+    echo "Compiling Bug reports in wasm"
+    for f in smith/*.wasm; do 
+        echo $f
+        cp $f test/$(basename $f .wasm).wasm
     done
 fi
