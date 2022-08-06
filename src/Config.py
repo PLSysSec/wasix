@@ -67,7 +67,7 @@ def getConfig():
       {
         "name": "wasmtime",
         "getCmds":
-          lambda dir, wasm: [["wasmtime", "--dir={}".format(dir), "--enable-all", wasm]]
+          lambda dir, wasm: [["wasmtime", "--dir={}".format(dir), "--wasm-features", "all", wasm]]
       },
       {
         "name": "wasmer",
@@ -89,18 +89,19 @@ def getConfig():
       {
         "name": "wavm",
         "getCmds": 
-          lambda dir, wasm: [["wavm", "run", "--function=_start", "--enable", "all", "--mount-root", dir, wasm]]
+          lambda dir, wasm: [["wavm", "run", "--function=_start", "--enable", "all", wasm]]
+          # lambda dir, wasm: [["wavm", "run", "--function=_start", "--enable", "all", "--mount-root", dir, wasm]]
       },
       {
         "name": "iwasm",
         "getCmds":
           lambda dir, wasm: [["iwasm", "--dir={}".format(dir), "--function", "_start", wasm]]
       },
-      {
-        "name": "spec",
-        "getCmds":
-          lambda dir, wasm: [["/Users/zijie/Programs/wasix/selected_input/wasm", wasm]]
-      },
+      # {
+      #   "name": "spec",
+      #   "getCmds":
+      #     lambda dir, wasm: [["/Users/zijie/Programs/wasix/selected_input/wasm", wasm]]
+      # },
       # {
       #   "name": "wasm3",
       #   "getCmds": 
