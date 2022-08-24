@@ -1,0 +1,11 @@
+(module
+  (type (;0;) (func (param i32) (result f32)))
+  (type (;1;) (func))
+  (type (;2;) (func))
+  (memory (;0;) 3079)
+  (global (;0;) i32 i32.const -215642089)
+  (global (;1;) (mut funcref) ref.null func)
+  (global (;2;) (mut i32) i32.const 100)
+  (export "{" (memory 0))
+  (elem (;0;) func)
+)

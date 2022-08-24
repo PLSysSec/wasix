@@ -1,0 +1,10 @@
+(module
+  (import "0\16" "" (memory (;0;) 2))
+  (import "]" "" (global (;0;) v128))
+  (table (;0;) 5617 externref)
+  (global (;1;) (mut i32) i32.const 100)
+  (export "" (table 0))
+  (elem (;0;) externref (ref.null extern) (ref.null extern) (ref.null extern))
+  (data (;0;) (i32.const 292) "")
+  (data (;1;) (i32.const 0) "")
+)

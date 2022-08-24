@@ -1,0 +1,13 @@
+(module
+  (type (;0;) (func))
+  (type (;1;) (func (param f64 externref) (result funcref funcref)))
+  (type (;2;) (func (param funcref f32)))
+  (type (;3;) (func (param i32 externref) (result i64)))
+  (table (;0;) 997486 998962 externref)
+  (memory (;0;) 2002 4833)
+  (global (;0;) (mut i32) i32.const 100)
+  (data (;0;) (i32.const 2432) "")
+  (data (;1;) (i32.const 17188588) "")
+  (data (;2;) "")
+  (data (;3;) "\ae\89")
+)

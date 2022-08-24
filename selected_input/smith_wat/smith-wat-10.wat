@@ -1,0 +1,13 @@
+(module
+  (import "N\d5\b2" "" (memory (;0;) 1))
+  (table (;0;) 0 767309 funcref)
+  (global (;0;) (mut v128) v128.const i32x4 0x66308c00 0x5e490cb0 0xb4dde05b 0x8a0bc39b)
+  (global (;1;) (mut externref) ref.null extern)
+  (global (;2;) (mut i32) i32.const 100)
+  (export "" (global 1))
+  (export "1" (memory 0))
+  (elem (;0;) declare func)
+  (elem (;1;) funcref)
+  (elem (;2;) externref (ref.null extern))
+  (elem (;3;) declare externref (ref.null extern))
+)

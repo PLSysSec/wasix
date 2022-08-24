@@ -1,0 +1,11 @@
+(module
+  (type (;0;) (func))
+  (type (;1;) (func))
+  (type (;2;) (func (param f64)))
+  (table (;0;) 1636 externref)
+  (memory (;0;) 2 48005)
+  (global (;0;) (mut i32) i32.const 100)
+  (export "" (table 0))
+  (elem (;0;) (i32.const 0) externref (ref.null extern) (ref.null extern) (ref.null extern))
+  (data (;0;) "")
+)
